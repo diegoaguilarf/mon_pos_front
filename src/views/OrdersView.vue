@@ -1,369 +1,180 @@
 <template>
   <div class="h-full">
-    <div class="grid grid-cols-3 gap-10">
-      <div class="border rounded-lg">
-        <div class="h-16 border-b py-2 px-3">Por aceptar</div>
-        <div class="p-5">
-          <ul role="list" class="grid grid-cols-1 gap-6">
-            <li
-              v-for="person in people"
-              :key="person.email"
-              class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-            >
+    <Header />
+    <div class="py-10">
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div class="grid grid-cols-3 gap-10">
+            <div class="border rounded-lg">
               <div
-                class="flex w-full items-center justify-between space-x-6 p-6"
+                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
               >
-                <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                    <h3 class="truncate text-sm font-medium text-gray-900">
-                      {{ person.name }}
-                    </h3>
-                    <span
-                      class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-                      >{{ person.role }}</span
-                    >
-                  </div>
-                  <p class="mt-1 truncate text-sm text-gray-500">
-                    {{ person.title }}
-                  </p>
-                </div>
-                <img
-                  class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  :src="person.imageUrl"
-                  alt=""
-                />
+                Por aceptar
               </div>
-              <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="flex w-0 flex-1">
-                    <a
-                      :href="`mailto:${person.email}`"
-                      class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <EnvelopeIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Email
-                    </a>
-                  </div>
-                  <div class="-ml-px flex w-0 flex-1">
-                    <a
-                      :href="`tel:${person.telephone}`"
-                      class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <PhoneIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Call
-                    </a>
-                  </div>
-                </div>
+              <div v-if="pendingOrders.length === 0">
+                Aqui veras las ordenes por aceptar
               </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="border rounded-lg">
-        <div class="h-16 border-b py-2 px-3">Por aceptar</div>
-        <div class="p-5">
-          <ul role="list" class="grid grid-cols-1 gap-6">
-            <li
-              v-for="person in people"
-              :key="person.email"
-              class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-            >
+              <div v-else class="p-5">
+                <ul role="list" class="grid grid-cols-1 gap-6">
+                  <OrderItem
+                    v-for="order in pendingOrders"
+                    :key="order.email"
+                    :order="order"
+                  >
+                  </OrderItem>
+                </ul>
+              </div>
+            </div>
+            <div class="border rounded-lg">
               <div
-                class="flex w-full items-center justify-between space-x-6 p-6"
+                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
               >
-                <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                    <h3 class="truncate text-sm font-medium text-gray-900">
-                      {{ person.name }}
-                    </h3>
-                    <span
-                      class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-                      >{{ person.role }}</span
-                    >
-                  </div>
-                  <p class="mt-1 truncate text-sm text-gray-500">
-                    {{ person.title }}
-                  </p>
-                </div>
-                <img
-                  class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  :src="person.imageUrl"
-                  alt=""
-                />
+                En preparación
               </div>
-              <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="flex w-0 flex-1">
-                    <a
-                      :href="`mailto:${person.email}`"
-                      class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <EnvelopeIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Email
-                    </a>
-                  </div>
-                  <div class="-ml-px flex w-0 flex-1">
-                    <a
-                      :href="`tel:${person.telephone}`"
-                      class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <PhoneIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Call
-                    </a>
-                  </div>
-                </div>
+              <div v-if="preparingOrders.length === 0">
+                Aqui veras las ordenes por aceptar
               </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="border rounded-lg">
-        <div class="h-16 border-b py-2 px-3">Por aceptar</div>
-        <div class="p-5">
-          <ul role="list" class="grid grid-cols-1 gap-6">
-            <li
-              v-for="person in people"
-              :key="person.email"
-              class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-            >
+              <div v-else class="p-5">
+                <ul role="list" class="grid grid-cols-1 gap-6">
+                  <OrderItem
+                    v-for="order in preparingOrders"
+                    :key="order.email"
+                    :order="order"
+                  >
+                  </OrderItem>
+                </ul>
+              </div>
+            </div>
+            <div class="border rounded-lg">
               <div
-                class="flex w-full items-center justify-between space-x-6 p-6"
+                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
               >
-                <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                    <h3 class="truncate text-sm font-medium text-gray-900">
-                      {{ person.name }}
-                    </h3>
-                    <span
-                      class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-                      >{{ person.role }}</span
-                    >
-                  </div>
-                  <p class="mt-1 truncate text-sm text-gray-500">
-                    {{ person.title }}
-                  </p>
-                </div>
-                <img
-                  class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  :src="person.imageUrl"
-                  alt=""
-                />
+                Por entregar
               </div>
-              <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="flex w-0 flex-1">
-                    <a
-                      :href="`mailto:${person.email}`"
-                      class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <EnvelopeIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Email
-                    </a>
-                  </div>
-                  <div class="-ml-px flex w-0 flex-1">
-                    <a
-                      :href="`tel:${person.telephone}`"
-                      class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <PhoneIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Call
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="border rounded-lg">
-        <div class="h-16 border-b py-2 px-3">Por aceptar</div>
-        <div class="p-5">
-          <ul role="list" class="grid grid-cols-1 gap-6">
-            <li
-              v-for="person in people"
-              :key="person.email"
-              class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-            >
               <div
-                class="flex w-full items-center justify-between space-x-6 p-6"
+                v-if="deliveryOrders.length === 0"
+                class="flex items-center justify-center h-full"
               >
-                <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                    <h3 class="truncate text-sm font-medium text-gray-900">
-                      {{ person.name }}
-                    </h3>
-                    <span
-                      class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-                      >{{ person.role }}</span
-                    >
-                  </div>
-                  <p class="mt-1 truncate text-sm text-gray-500">
-                    {{ person.title }}
-                  </p>
-                </div>
-                <img
-                  class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  :src="person.imageUrl"
-                  alt=""
-                />
+                <p class="text-gray-500 text-sm">
+                  Aqui veras las ordenes por aceptar
+                </p>
               </div>
-              <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="flex w-0 flex-1">
-                    <a
-                      :href="`mailto:${person.email}`"
-                      class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <EnvelopeIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Email
-                    </a>
-                  </div>
-                  <div class="-ml-px flex w-0 flex-1">
-                    <a
-                      :href="`tel:${person.telephone}`"
-                      class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <PhoneIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Call
-                    </a>
-                  </div>
-                </div>
+              <div v-else class="p-5">
+                <ul role="list" class="grid grid-cols-1 gap-6">
+                  <OrderItem
+                    v-for="order in deliveryOrders"
+                    :key="order.email"
+                    :order="order"
+                  >
+                  </OrderItem>
+                </ul>
               </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="border rounded-lg">
-        <div class="h-16 border-b py-2 px-3">Por aceptar</div>
-        <div class="p-5">
-          <ul role="list" class="grid grid-cols-1 gap-6">
-            <li
-              v-for="person in people"
-              :key="person.email"
-              class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-            >
-              <div
-                class="flex w-full items-center justify-between space-x-6 p-6"
-              >
-                <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                    <h3 class="truncate text-sm font-medium text-gray-900">
-                      {{ person.name }}
-                    </h3>
-                    <span
-                      class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
-                      >{{ person.role }}</span
-                    >
-                  </div>
-                  <p class="mt-1 truncate text-sm text-gray-500">
-                    {{ person.title }}
-                  </p>
-                </div>
-                <img
-                  class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
-                  :src="person.imageUrl"
-                  alt=""
-                />
-              </div>
-              <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="flex w-0 flex-1">
-                    <a
-                      :href="`mailto:${person.email}`"
-                      class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <EnvelopeIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Email
-                    </a>
-                  </div>
-                  <div class="-ml-px flex w-0 flex-1">
-                    <a
-                      :href="`tel:${person.telephone}`"
-                      class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900"
-                    >
-                      <PhoneIcon
-                        class="h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Call
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 <script setup>
-import { EnvelopeIcon, PhoneIcon } from "@heroicons/vue/20/solid";
+import Header from "@/components/Header.vue";
+import OrderItem from "@/components/OrderItem.vue";
+import { computed } from "vue";
+
+const user = {
+  name: "Tom Cook",
+  email: "tom@example.com",
+  imageUrl:
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+};
+const navigation = [
+  { name: "Dashboard", href: "#", current: true },
+  { name: "Team", href: "#", current: false },
+  { name: "Projects", href: "#", current: false },
+  { name: "Calendar", href: "#", current: false },
+];
+const userNavigation = [
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" },
+];
+
+const pendingOrders = computed(() => {
+  return people.filter((order) => order.status === "pending");
+});
+const preparingOrders = computed(() => {
+  return people.filter((order) => order.status === "preparing");
+});
+
+const deliveryOrders = computed(() => {
+  return people.filter((order) => order.status === "delivery");
+});
 
 const people = [
   {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: 123,
+    products: [
+      {
+        name: "Llanero",
+        quantity: 3,
+      },
+      {
+        name: "Paisa",
+        quantity: 2,
+      },
+      {
+        name: "Thai",
+        quantity: 1,
+      },
+    ],
+    status: "pending",
+    comment: "Sin carne",
   },
   {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: 456,
+    products: [
+      {
+        name: "Llanero",
+        quantity: 3,
+      },
+    ],
+    comment: "Sin carne",
+    status: "pending",
   },
   {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: 789,
+    products: [
+      {
+        name: "Llanero",
+        quantity: 3,
+      },
+    ],
+    comment: "Sin carne",
+    status: "pending",
   },
   {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
+    id: 543,
+    products: [
+      {
+        name: "Llanero",
+        quantity: 3,
+      },
+    ],
+    comment: "Sin carne",
+    status: "preparing",
   },
+  {
+    id: 212,
+    products: [
+      {
+        name: "Llanero",
+        quantity: 3,
+      },
+    ],
+    comment: "Sin carne",
+    status: "delivery",
+  },
+
   // More people...
 ];
 </script>
