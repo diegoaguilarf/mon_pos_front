@@ -2,7 +2,7 @@
   <div class="w-full h-screen flex">
     <div class="h-full flex-1 bg-gray-100 p-4 overflow-auto">
       <div class="h-full flex flex-wrap content-start gap-4">
-        <Product v-for="product in products" :product={product}></Product>
+        <Product v-for="product in products" :product={product} :key="product.id"></Product>
       </div>
     </div>
     <div class="w-[500px] h-screen bg-white">
