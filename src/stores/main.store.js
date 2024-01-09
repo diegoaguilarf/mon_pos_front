@@ -9,6 +9,7 @@ export const useMainStore = defineStore("mainStore", {
     orderCustomer: null,
     orderPaymentMethod: null,
     orderShippingMethod: null,
+    orderNotes: null,
     paymentMethodModal: false,
     shippingMethodModal: false,
     notesModal: false,
@@ -98,6 +99,10 @@ export const useMainStore = defineStore("mainStore", {
       this.orderShippingMethod = shipping;
     },
 
+    async addNotesToOrder(value) {
+      this.orderNotes = value;
+    },
+
     async getProducts() {
       const { data: dataEnterprises, error } = await supabase
         .from("products")
@@ -168,7 +173,7 @@ export const useMainStore = defineStore("mainStore", {
         .insert({
           shipping_method: this.orderShippingMethod,
           payment_method: this.orderPaymentMethod,
-          notes: "",
+          notes: this.orderNotes,
           user_id: this.orderCustomer.id,
         })
         .select();
@@ -180,6 +185,12 @@ export const useMainStore = defineStore("mainStore", {
       }));
 
       await supabase.from("orders_products").insert(orderProducts).select();
+
+      this.orderProducts = [];
+      this.orderCustomer = null;
+      this.orderPaymentMethod = null;
+      this.orderShippingMethod = null;
+      this.orderNotes = null;
 
       if (error) {
         console.log(error);
@@ -220,6 +231,10 @@ export const useMainStore = defineStore("mainStore", {
 
     async toggleShippingMethodModal() {
       this.shippingMethodModal = !this.shippingMethodModal;
+    },
+
+    async toggleNotesModal() {
+      this.notesModal = !this.notesModal;
     },
   },
 

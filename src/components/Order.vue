@@ -62,17 +62,20 @@
             <router-link
               to="/clientes"
               class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
+              :class="mainStore?.orderCustomer ? 'bg-green-600 text-white' : ''"
             >
               <p>{{ mainStore?.orderCustomer?.full_name || "Cliente" }}</p>
             </router-link>
             <div
               class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
+              :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''"
               @click="openPayment"
             >
               <p>{{ mainStore?.orderPaymentMethod || "Medio de pago" }}</p>
             </div>
             <div
               class="flex-1 py-4 text-center border-b cursor-pointer"
+              :class="mainStore?.orderShippingMethod ? 'bg-green-600 text-white' : ''"
               @click="openShipping"
             >
               <p>{{ mainStore?.orderShippingMethod || "Medio de envio" }}</p>
@@ -106,7 +109,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useMainStore } from "@/stores/main.store";
-import router from "@/router";
 
 const mainStore = useMainStore();
 
@@ -130,14 +132,13 @@ const openShipping = () => {
 
 const createOrder = () => {
   if (
+    mainStore?.orderProducts?.length === 0 ||
     !mainStore?.orderCustomer ||
-    !mainStore?.orderPaymentMethod ||
-    !mainStore?.orderShippingMethod
+    !mainStore?.orderPaymentMethod
   ) {
-    alert("Debe seleccionar Cliente, Metodo de pago y Medio de envio");
+    alert("Debe seleccionar productos, cliente y metodo de pago.");
     return;
   }
-  mainStore.createOrder();
-  router.push("/");
+  mainStore.toggleNotesModal();
 };
 </script>

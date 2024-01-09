@@ -72,14 +72,14 @@ onMounted(() => {
 const orders = ref([]);
 
 const newOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "new");
+  return orders.value.filter((order) => order.status === "new").reverse();
 });
 const preparingOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "preparing");
+  return orders.value.filter((order) => order.status === "preparing").reverse();
 });
 
 const deliveryOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "delivery");
+  return orders.value.filter((order) => order.status === "delivery").reverse();
 });
 
 const init = () => {
@@ -87,7 +87,7 @@ const init = () => {
     .on(
       'postgres_changes',
       { event: 'INSERT', schema: 'public', table: 'orders' },
-      (payload) => {
+      () => {
         listenOrderInsert()
       }
     )

@@ -14,9 +14,9 @@
             </li>
           </ul>
           <div class="border-t mt-3">
-            <h3 class="text-gray-500 text-xs mt-3">Comentarios:</h3>
+            <h3 class="text-gray-500 text-xs mt-3">Nota:</h3>
             <p class="text-xs text-gray-500">
-              {{ order.comment }}
+              {{ order.notes }}
             </p>
           </div>
         </div>
