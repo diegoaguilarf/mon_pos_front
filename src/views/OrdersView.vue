@@ -9,12 +9,12 @@
               <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
                 Por aceptar
               </div>
-              <div v-if="pendingOrders.length === 0">
+              <div v-if="newOrders.length === 0">
                 Aqui veras las ordenes por aceptar
               </div>
               <div v-else class="p-5">
                 <ul role="list" class="grid grid-cols-1 gap-6">
-                  <OrderItem v-for="order in pendingOrders" :key="order.email" :order="order">
+                  <OrderItem v-for="order in newOrders" :key="order.id" :order="order">
                   </OrderItem>
                 </ul>
               </div>
@@ -56,26 +56,42 @@
   </div>
 </template>
 <script setup>
+import { useMainStore } from "@/stores/main.store";
 import Header from "@/components/Header.vue";
 import OrderItem from "@/components/OrderItem.vue";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { supabase } from "@/services/supabase.service";
+
+const mainStore = useMainStore();
 
 onMounted(() => {
   init()
+  getOrders();
+});
+
+const orders = ref([]);
+
+const newOrders = computed(() => {
+  return orders.value.filter((order) => order.status === "new");
+});
+const preparingOrders = computed(() => {
+  return orders.value.filter((order) => order.status === "preparing");
+});
+
+const deliveryOrders = computed(() => {
+  return orders.value.filter((order) => order.status === "delivery");
 });
 
 const init = () => {
-  console.log("ANY")
   supabase.channel('custom-insert-channel')
-  .on(
-    'postgres_changes',
-    { event: 'INSERT', schema: 'public', table: 'orders' },
-    (payload) => {
-      console.log('INSERT Change received!', payload)
-    }
-  )
-  .subscribe()
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'orders' },
+      (payload) => {
+        listenOrderInsert()
+      }
+    )
+    .subscribe()
 
   supabase.channel('custom-update-channel')
     .on(
@@ -83,105 +99,27 @@ const init = () => {
       { event: 'UPDATE', schema: 'public', table: 'orders' },
       (payload) => {
         console.log('UPDATE Change received!', payload)
+        listenOrderStatusChange(payload.new)
       }
     )
     .subscribe()
 };
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+const getOrders = async () => {
+  const originOrders = await mainStore.getOrders();
+  orders.value = originOrders.data;
+}
 
-const pendingOrders = computed(() => {
-  return people.filter((order) => order.status === "pending");
-});
-const preparingOrders = computed(() => {
-  return people.filter((order) => order.status === "preparing");
-});
+const listenOrderInsert = async () => {
+  getOrders()
+}
 
-const deliveryOrders = computed(() => {
-  return people.filter((order) => order.status === "delivery");
-});
-
-const people = [
-  {
-    id: 123,
-    products: [
-      {
-        name: "Llanero",
-        quantity: 3,
-      },
-      {
-        name: "Paisa",
-        quantity: 2,
-      },
-      {
-        name: "Thai",
-        quantity: 1,
-      },
-    ],
-    status: "pending",
-    comment: "Sin carne",
-  },
-  {
-    id: 456,
-    products: [
-      {
-        name: "Llanero",
-        quantity: 3,
-      },
-    ],
-    comment: "Sin carne",
-    status: "pending",
-  },
-  {
-    id: 789,
-    products: [
-      {
-        name: "Llanero",
-        quantity: 3,
-      },
-    ],
-    comment: "Sin carne",
-    status: "pending",
-  },
-  {
-    id: 543,
-    products: [
-      {
-        name: "Llanero",
-        quantity: 3,
-      },
-    ],
-    comment: "Sin carne",
-    status: "preparing",
-  },
-  {
-    id: 212,
-    products: [
-      {
-        name: "Llanero",
-        quantity: 3,
-      },
-    ],
-    comment: "Sin carne",
-    status: "delivery",
-  },
-
-  // More people...
-];
+const listenOrderStatusChange = async ({ id, status }) => {
+  orders.value = orders.value.map((order) => {
+    if (order.id === id) {
+      order.status = status;
+    }
+    return order;
+  });
+}
 </script>

@@ -116,6 +116,30 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
+    async getOrders() {
+      const { data: dataEnterprises, error } = await supabase.from("orders").select(`
+      *,
+      orders_products (
+        *,
+        products (
+          *
+        )
+      )
+    `)
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: dataEnterprises,
+        };
+      }
+    },
+
     async addProductToOrder(product) {
       const productIndex = this.orderProducts.findIndex(
         (item) => item.id === product.id
@@ -156,6 +180,26 @@ export const useMainStore = defineStore("mainStore", {
       }));
 
       await supabase.from("orders_products").insert(orderProducts).select();
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: dataEnterprises,
+        };
+      }
+    },
+
+    async updateOrderStatus({ id, status }) {
+      const { data: dataEnterprises, error } = await supabase
+      .from('orders')
+      .update({ status })
+      .eq('id', id)
+      .select()
 
       if (error) {
         console.log(error);
