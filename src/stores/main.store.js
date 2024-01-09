@@ -11,7 +11,7 @@ export const useMainStore = defineStore("mainStore", {
     orderShippingMethod: null,
     paymentMethodModal: false,
     shippingMethodModal: false,
-    notesModal: false
+    notesModal: false,
   }),
   actions: {
     async findUser(values) {
@@ -50,7 +50,9 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async getCustomers() {
-      const { data: dataEnterprises, error } = await supabase.from("users").select();
+      const { data: dataEnterprises, error } = await supabase
+        .from("users")
+        .select();
 
       if (error) {
         console.log(error);
@@ -67,7 +69,7 @@ export const useMainStore = defineStore("mainStore", {
 
     async createCustomer(customer) {
       const { data, error } = await supabase
-        .from('users')
+        .from("users")
         .insert([customer])
         .select();
 
@@ -87,7 +89,7 @@ export const useMainStore = defineStore("mainStore", {
     async assignCustomerToOrder(customer) {
       this.orderCustomer = customer;
     },
-    
+
     async assignPaymentMethodToOrder(payment) {
       this.orderPaymentMethod = payment;
     },
@@ -97,7 +99,9 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async getProducts() {
-      const { data: dataEnterprises, error } = await supabase.from("products").select();
+      const { data: dataEnterprises, error } = await supabase
+        .from("products")
+        .select();
 
       if (error) {
         console.log(error);
@@ -113,7 +117,9 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async addProductToOrder(product) {
-      const productIndex = this.orderProducts.findIndex((item) => item.id === product.id);
+      const productIndex = this.orderProducts.findIndex(
+        (item) => item.id === product.id
+      );
       if (productIndex === -1) {
         this.orderProducts.push({ ...product, quantity: 1 });
       } else {
@@ -122,7 +128,9 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async removeProductFromOrder(product) {
-      const productIndex = this.orderProducts.findIndex((item) => item.id === product.id);
+      const productIndex = this.orderProducts.findIndex(
+        (item) => item.id === product.id
+      );
       if (this.orderProducts[productIndex].quantity === 1) {
         this.orderProducts.splice(productIndex, 1);
       } else {
@@ -131,26 +139,23 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async createOrder() {
-
-      const { data: order, error } = await supabase.from("orders").insert({
-        shipping_method: this.orderShippingMethod,
-        payment_method: this.orderPaymentMethod,
-        notes: "",
-        user_id: this.orderCustomer.id,
-      }).select();
+      const { data: order, error } = await supabase
+        .from("orders")
+        .insert({
+          shipping_method: this.orderShippingMethod,
+          payment_method: this.orderPaymentMethod,
+          notes: "",
+          user_id: this.orderCustomer.id,
+        })
+        .select();
 
       const orderProducts = this.orderProducts.map((product) => ({
         order_id: order[0].id,
         product_id: product.id,
-        quantity: product.quantity
+        quantity: product.quantity,
       }));
 
-      console.log(orderProducts);
-
-      await supabase
-        .from('orders_products')
-        .insert(orderProducts)
-        .select()
+      await supabase.from("orders_products").insert(orderProducts).select();
 
       if (error) {
         console.log(error);
@@ -171,10 +176,14 @@ export const useMainStore = defineStore("mainStore", {
 
     async toggleShippingMethodModal() {
       this.shippingMethodModal = !this.shippingMethodModal;
-    }
+    },
   },
 
-  getters: {},
+  getters: {
+    subtotalOrder() {
+      return this.orderProducts.reduce((a, b) => a + b.quantity * b.price, 0);
+    },
+  },
 });
 
 if (import.meta.hot) {
