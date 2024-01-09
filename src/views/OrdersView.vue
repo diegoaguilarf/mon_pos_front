@@ -4,7 +4,7 @@
     <div class="py-10">
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div class="grid grid-cols-3 gap-10">
+          <div class="grid md:grid-cols-3 grid-cols-1 gap-10">
             <div class="border rounded-lg">
               <div
                 class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
