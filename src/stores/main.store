@@ -82,9 +82,9 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async addProductToOrder(product) {
-      const product = this.orderProducts.find((item) => item.id === product.id);
-      if (product) {
-        this.orderProducts.push(product);
+      const products = this.orderProducts.find((item) => item.id === product.id);
+      if (products) {
+        this.orderProducts.push(products);
       } else {
 
       }
