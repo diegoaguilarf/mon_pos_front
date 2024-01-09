@@ -1,10 +1,17 @@
 import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "@/services/supabase.service";
 
 export const useMainStore = defineStore("mainStore", {
   state: () => ({
-    user: JSON.parse(localStorage.getItem("user") || null),
+    user: null,
+    orderProducts: [{
+      id: 1,
+      name: 'Throwback Hip Bag',
+      price: '$90.00',
+      quantity: 1,
+      image: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg'
+    }]
   }),
   actions: {
     async findUser(values) {
@@ -57,6 +64,31 @@ export const useMainStore = defineStore("mainStore", {
         };
       }
     },
+
+    async getProducts() {
+      const { data: dataEnterprises, error } = await supabase.from("products").select();
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: dataEnterprises,
+        };
+      }
+    },
+
+    async addProductToOrder(product) {
+      const product = this.orderProducts.find((item) => item.id === product.id);
+      if (product) {
+        this.orderProducts.push(product);
+      } else {
+
+      }
+    }
   },
 
   getters: {},
