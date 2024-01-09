@@ -41,16 +41,16 @@
 
                 <div class="border-t border-gray-200">
                     <div class="flex">
-                        <div class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
-                            @click="openCustomer">
-                            <p>Cliente</p>
-                        </div>
+                        <router-link to="/clientes"
+                            class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer">
+                            <p>{{ mainStore?.orderCustomer?.full_name || "Cliente" }}</p>
+                        </router-link>
                         <div class="flex-1 py-4 text-center  border-r border-b border-gray-200 cursor-pointer"
                             @click="openPayment">
-                            <p>Medio de pago</p>
+                            <p>{{ mainStore?.orderPaymentMethod || "Medio de pago" }}</p>
                         </div>
                         <div class="flex-1 py-4 text-center border-b cursor-pointer" @click="openShipping">
-                            <p>Medio de envio</p>
+                            <p>{{ mainStore?.orderShippingMethod || "Medio de envio" }}</p>
                         </div>
                     </div>
                     <div class="px-4 py-6 sm:px-6">
@@ -74,9 +74,8 @@
   
 <script setup>
 import { ref } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useMainStore } from "@/stores/main.store";
+import router from '@/router';
 
 const mainStore = useMainStore();
 
@@ -84,10 +83,6 @@ const products = ref(mainStore.orderProducts);
 
 const removeProduct = (product) => {
     mainStore.removeProductFromOrder(product);
-}
-
-const openCustomer = () => {
-    // mainStore.customerModal = true;
 }
 
 const openPayment = () => {
@@ -100,6 +95,8 @@ const openShipping = () => {
 
 const createOrder = () => {
     console.log("Hacer order");
+    mainStore.createOrder();
+    router.push("/");
 }
 
 </script>

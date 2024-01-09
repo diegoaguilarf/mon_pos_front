@@ -6,7 +6,10 @@ export const useMainStore = defineStore("mainStore", {
   state: () => ({
     user: null,
     orderProducts: [],
-    paymentMethodModal: true,
+    orderCustomer: null,
+    orderPaymentMethod: null,
+    orderShippingMethod: null,
+    paymentMethodModal: false,
     shippingMethodModal: false,
     notesModal: false
   }),
@@ -46,8 +49,8 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
-    async getClients() {
-      const { data: dataEnterprises, error } = await supabase.from("").select();
+    async getCustomers() {
+      const { data: dataEnterprises, error } = await supabase.from("users").select();
 
       if (error) {
         console.log(error);
@@ -60,6 +63,37 @@ export const useMainStore = defineStore("mainStore", {
           data: dataEnterprises,
         };
       }
+    },
+
+    async createCustomer(customer) {
+      const { data, error } = await supabase
+        .from('users')
+        .insert([customer])
+        .select();
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: data[0],
+        };
+      }
+    },
+
+    async assignCustomerToOrder(customer) {
+      this.orderCustomer = customer;
+    },
+    
+    async assignPaymentMethodToOrder(payment) {
+      this.orderPaymentMethod = payment;
+    },
+
+    async assignShippingMethodToOrder(shipping) {
+      this.orderShippingMethod = shipping;
     },
 
     async getProducts() {
@@ -96,20 +130,22 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
-    async createOrder(values) {
+    async createOrder() {
 
       const { data: order, error } = await supabase.from("orders").insert({
-        shipping_method: "",
-        payment_method: "",
+        shipping_method: this.orderShippingMethod,
+        payment_method: this.orderPaymentMethod,
         notes: "",
-        user_id: this.orderUser.id,
-      });
+        user_id: this.orderCustomer.id,
+      }).select();
 
-      const orderProducts = this.orderProducts.map(async (product) => ({
-        order_id: order.id,
+      const orderProducts = this.orderProducts.map((product) => ({
+        order_id: order[0].id,
         product_id: product.id,
         quantity: product.quantity
       }));
+
+      console.log(orderProducts);
 
       await supabase
         .from('orders_products')
