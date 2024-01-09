@@ -6,9 +6,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div class="grid md:grid-cols-3 grid-cols-1 gap-10">
             <div class="border rounded-lg">
-              <div
-                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
-              >
+              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
                 Por aceptar
               </div>
               <div v-if="pendingOrders.length === 0">
@@ -16,19 +14,13 @@
               </div>
               <div v-else class="p-5">
                 <ul role="list" class="grid grid-cols-1 gap-6">
-                  <OrderItem
-                    v-for="order in pendingOrders"
-                    :key="order.email"
-                    :order="order"
-                  >
+                  <OrderItem v-for="order in pendingOrders" :key="order.email" :order="order">
                   </OrderItem>
                 </ul>
               </div>
             </div>
             <div class="border rounded-lg">
-              <div
-                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
-              >
+              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
                 En preparación
               </div>
               <div v-if="preparingOrders.length === 0">
@@ -36,36 +28,23 @@
               </div>
               <div v-else class="p-5">
                 <ul role="list" class="grid grid-cols-1 gap-6">
-                  <OrderItem
-                    v-for="order in preparingOrders"
-                    :key="order.email"
-                    :order="order"
-                  >
+                  <OrderItem v-for="order in preparingOrders" :key="order.email" :order="order">
                   </OrderItem>
                 </ul>
               </div>
             </div>
             <div class="border rounded-lg">
-              <div
-                class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex"
-              >
+              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
                 Por entregar
               </div>
-              <div
-                v-if="deliveryOrders.length === 0"
-                class="flex items-center justify-center h-full"
-              >
+              <div v-if="deliveryOrders.length === 0" class="flex items-center justify-center h-full">
                 <p class="text-gray-500 text-sm">
                   Aqui veras las ordenes por aceptar
                 </p>
               </div>
               <div v-else class="p-5">
                 <ul role="list" class="grid grid-cols-1 gap-6">
-                  <OrderItem
-                    v-for="order in deliveryOrders"
-                    :key="order.email"
-                    :order="order"
-                  >
+                  <OrderItem v-for="order in deliveryOrders" :key="order.email" :order="order">
                   </OrderItem>
                 </ul>
               </div>
@@ -79,7 +58,35 @@
 <script setup>
 import Header from "@/components/Header.vue";
 import OrderItem from "@/components/OrderItem.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { supabase } from "@/services/supabase.service";
+
+onMounted(() => {
+  init()
+});
+
+const init = () => {
+  console.log("ANY")
+  supabase.channel('custom-insert-channel')
+  .on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'orders' },
+    (payload) => {
+      console.log('INSERT Change received!', payload)
+    }
+  )
+  .subscribe()
+
+  supabase.channel('custom-update-channel')
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'orders' },
+      (payload) => {
+        console.log('UPDATE Change received!', payload)
+      }
+    )
+    .subscribe()
+};
 
 const user = {
   name: "Tom Cook",
