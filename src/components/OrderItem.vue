@@ -9,12 +9,8 @@
             </h3>
           </div>
           <ul class="">
-            <li
-              v-for="(product, index) in order.products"
-              :key="index"
-              class="mt-1 truncate text-md text-gray-500"
-            >
-              <p>- {{ product.name }} X {{ product.quantity }}</p>
+            <li v-for="(product, index) in order.orders_products" :key="index" class="mt-1 truncate text-md text-gray-500">
+              <p>- {{ product.products.name }} X {{ product.quantity }}</p>
             </li>
           </ul>
           <div class="border-t mt-3">
@@ -29,17 +25,16 @@
         <div class="-mt-px flex divide-x divide-gray-200">
           <div class="flex w-0 flex-1">
             <a
-              class="cursor-pointer relative text-white bg-green-500 -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-2 text-sm font-semibold"
-            >
-              Aceptar
+              class="cursor-pointer relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-2 text-sm font-semibold">
+              Ver Info
             </a>
           </div>
-          <div class="-ml-px flex w-0 flex-1">
-            <a
-              class="cursor-pointer relative text-white bg-red-400 inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-2 text-sm font-semibold"
-            >
-              Rechazar
-            </a>
+          <div class="flex w-0 flex-1">
+            <button
+              @click="moveOrderToNextStatus"
+              class="cursor-pointer relative text-white bg-green-500 -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-2 text-sm font-semibold">
+              Aceptar
+            </button>
           </div>
         </div>
       </div>
@@ -47,6 +42,20 @@
   </div>
 </template>
 <script setup>
-import { EnvelopeIcon, PhoneIcon } from "@heroicons/vue/20/solid";
+import { useMainStore } from "@/stores/main.store";
+
+const mainStore = useMainStore();
+
 const props = defineProps(["order"]);
+
+
+const moveOrderToNextStatus = async () => {
+  const nextStatus = {
+    new: "preparing",
+    preparing: "delivery",
+    delivery: "done",
+  }
+  await mainStore.updateOrderStatus({ id: props.order.id, status: nextStatus[props.order.status] });
+}
+
 </script>
