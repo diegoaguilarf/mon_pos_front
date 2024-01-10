@@ -5,10 +5,12 @@ import { supabase } from "@/services/supabase.service";
 export const useMainStore = defineStore("mainStore", {
   state: () => ({
     user: null,
+    orders: [],
     orderProducts: [],
     orderCustomer: null,
     orderPaymentMethod: null,
     orderShippingMethod: null,
+    orderShippingCost: null,
     orderNotes: null,
     paymentMethodModal: false,
     shippingMethodModal: false,
@@ -104,6 +106,10 @@ export const useMainStore = defineStore("mainStore", {
       this.orderNotes = value;
     },
 
+    async addShippingCostToOrder(shipping_cost) {
+      this.orderShippingCost = shipping_cost;
+    },
+
     async getProducts() {
       const { data: dataEnterprises, error } = await supabase
         .from("products")
@@ -136,6 +142,8 @@ export const useMainStore = defineStore("mainStore", {
       )
     `)
 
+      this.orders = dataEnterprises;
+
       if (error) {
         console.log(error);
         return {
@@ -147,6 +155,10 @@ export const useMainStore = defineStore("mainStore", {
           data: dataEnterprises,
         };
       }
+    },
+
+    setOrders(orders) {
+      this.orders = orders;
     },
 
     async addProductToOrder(product) {
@@ -177,10 +189,13 @@ export const useMainStore = defineStore("mainStore", {
         .insert({
           shipping_method: this.orderShippingMethod,
           payment_method: this.orderPaymentMethod,
+          shipping_cost: Number(this.orderShippingCost),
           notes: this.orderNotes,
           user_id: this.orderCustomer.id,
         })
         .select();
+
+      console.log("here", order, error);
 
       const orderProducts = this.orderProducts.map((product) => ({
         order_id: order[0].id,
@@ -194,6 +209,7 @@ export const useMainStore = defineStore("mainStore", {
       this.orderCustomer = null;
       this.orderPaymentMethod = null;
       this.orderShippingMethod = null;
+      this.orderShippingCost = null;
       this.orderNotes = null;
 
       if (error) {
@@ -211,10 +227,40 @@ export const useMainStore = defineStore("mainStore", {
 
     async updateOrderStatus({ id, status }) {
       const { data: dataEnterprises, error } = await supabase
-      .from('orders')
-      .update({ status })
-      .eq('id', id)
-      .select()
+        .from('orders')
+        .update({ status })
+        .eq('id', id)
+        .select()
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: dataEnterprises,
+        };
+      }
+    },
+
+    async updateOrderShipping({ id, shipping_method }) {
+
+      const { data: dataEnterprises, error } = await supabase
+        .from('orders')
+        .update({ shipping_method })
+        .eq('id', id)
+        .select()
+
+      const orders = this.orders.map((order) => {
+        if (order.id === id) {
+          order.shipping_method = shipping_method;
+        }
+        return order;
+      });
+
+      this.setOrders(orders);
 
       if (error) {
         console.log(error);

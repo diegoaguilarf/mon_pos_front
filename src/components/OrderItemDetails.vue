@@ -42,7 +42,7 @@
                                                     <p>Notas: {{ mainStore?.orderDetails?.users.notes }}</p>
                                                 </div>
                                             </div>
-                                            <div class="flex-1 truncate">
+                                            <div class="flex-1 truncate mb-10">
                                                 <div class="flex items-center justify-between space-x-3">
                                                     <h3 class="text-lg font-semibold">Productos</h3>
                                                     <img src="@/assets/rappi.png"
@@ -67,6 +67,37 @@
                                                         {{ mainStore?.orderDetails?.notes }}
                                                     </p>
                                                 </div>
+
+                                            </div>
+                                            <div class="mb-10">
+                                                <div class="flex items-center justify-between space-x-3">
+                                                    <h3 class="text-lg font-semibold">Metodo de pago</h3>
+                                                    <p class=" text-gray-500">
+                                                        {{ mainStore?.orderDetails?.payment_method }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-10">
+                                                <div class="flex items-center justify-between space-x-3">
+                                                    <h3 class="text-lg font-semibold">Costo del envío</h3>
+                                                    <p class=" text-gray-500">
+                                                        {{ mainStore?.orderDetails?.shipping_cost }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div
+                                                v-if="mainStore?.orderDetails?.shipping_method === null || mainStore?.orderDetails?.shipping_method === ''">
+                                                <div class="flex items-center justify-between space-x-3">
+                                                    <h3 class="text-lg font-semibold">Escoger metodo de envio</h3>
+                                                </div>
+                                                <div class="flex mt-2 gap-4">
+                                                    <div class="border p-5 rounded cursor-pointer"
+                                                        :class="{ 'bg-green-600 text-white': shippingMethod === 'Monchef' }"
+                                                        @click="assignShippingMethodToOrder('Monchef')">Monchef</div>
+                                                    <div class="border p-5 rounded cursor-pointer"
+                                                        :class="{ 'bg-green-600 text-white': shippingMethod === 'Externo' }"
+                                                        @click="assignShippingMethodToOrder('Externo')">Externo</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -74,7 +105,7 @@
                                         <button type="button"
                                             class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
                                             @click="resetOrderDetails">Cancel</button>
-                                        <button type="submit"
+                                        <button type="submit" @click="updateOrderShipping"
                                             class="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
                                     </div>
                                 </div>
@@ -95,8 +126,19 @@ import { useMainStore } from "@/stores/main.store";
 
 const mainStore = useMainStore();
 
+const shippingMethod = ref(null);
+
 const resetOrderDetails = () => {
     mainStore.setOrderDetails(null);
+}
+
+const assignShippingMethodToOrder = (value) => {
+    shippingMethod.value = value;
+}
+
+const updateOrderShipping = async () => {
+    await mainStore.updateOrderShipping({ id: mainStore.orderDetails.id, shipping_method: shippingMethod.value });
+    resetOrderDetails()
 }
 
 const open = ref(true)

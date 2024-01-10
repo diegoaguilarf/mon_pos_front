@@ -87,21 +87,19 @@ onMounted(() => {
   getOrders();
 });
 
-const orders = ref([]);
-
 const newOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "new").reverse();
+  return mainStore.orders.filter((order) => order.status === "new").reverse();
 });
 const preparingOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "preparing").reverse();
+  return mainStore.orders.filter((order) => order.status === "preparing").reverse();
 });
 
 const deliveryOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "delivery"  && order.shipping_method !== 'Rappi').reverse();
+  return mainStore.orders.filter((order) => order.status === "delivery"  && order.shipping_method !== 'Rappi').reverse();
 });
 
 const deliveryRappiOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "delivery" && order.shipping_method === 'Rappi').reverse();
+  return mainStore.orders.filter((order) => order.status === "delivery" && order.shipping_method === 'Rappi').reverse();
 });
 
 const init = () => {
@@ -128,8 +126,7 @@ const init = () => {
 };
 
 const getOrders = async () => {
-  const originOrders = await mainStore.getOrders();
-  orders.value = originOrders.data;
+  mainStore.getOrders();
 }
 
 const listenOrderInsert = async () => {
@@ -137,11 +134,13 @@ const listenOrderInsert = async () => {
 }
 
 const listenOrderStatusChange = async ({ id, status }) => {
-  orders.value = orders.value.map((order) => {
+  const orders = mainStore.orders.map((order) => {
     if (order.id === id) {
       order.status = status;
     }
     return order;
   });
+
+  mainStore.setOrders(orders)
 }
 </script>
