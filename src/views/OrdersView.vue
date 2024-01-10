@@ -1,40 +1,40 @@
 <template>
-  <div class="h-full">
+  <div class="h-full bg-gray-100">
     <Header />
     <div class="py-10">
       <main>
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div class="grid md:grid-cols-3 grid-cols-1 gap-10">
-            <div class="border rounded-lg">
-              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
+          <div class="grid md:grid-cols-4 grid-cols-1 gap-8">
+            <div class="rounded-lg">
+              <div class="h-16 py-2 px-3 font-bold text-xl items-center flex sticky top-0 bg-gray-100 ">
                 Por aceptar
               </div>
               <div v-if="newOrders.length === 0">
                 Aqui veras las ordenes por aceptar
               </div>
-              <div v-else class="p-5">
+              <div v-else class="p-1">
                 <ul role="list" class="grid grid-cols-1 gap-6">
                   <OrderItem v-for="order in newOrders" :key="order.id" :order="order">
                   </OrderItem>
                 </ul>
               </div>
             </div>
-            <div class="border rounded-lg">
-              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
+            <div class="rounded-lg">
+              <div class="h-16 py-2 px-3 font-bold text-xl items-center flex sticky top-0 bg-gray-100 ">
                 En preparación
               </div>
               <div v-if="preparingOrders.length === 0">
                 Aqui veras las ordenes por aceptar
               </div>
-              <div v-else class="p-5">
+              <div v-else class="p-1">
                 <ul role="list" class="grid grid-cols-1 gap-6">
                   <OrderItem v-for="order in preparingOrders" :key="order.email" :order="order">
                   </OrderItem>
                 </ul>
               </div>
             </div>
-            <div class="border rounded-lg">
-              <div class="h-16 border-b py-2 px-3 font-bold text-xl items-center flex">
+            <div class="rounded-lg">
+              <div class="h-16 py-2 px-3 font-bold text-xl items-center flex sticky top-0 bg-gray-100 ">
                 Por entregar
               </div>
               <div v-if="deliveryOrders.length === 0" class="flex items-center justify-center h-full">
@@ -42,9 +42,25 @@
                   Aqui veras las ordenes por aceptar
                 </p>
               </div>
-              <div v-else class="p-5">
+              <div v-else class="p-1">
                 <ul role="list" class="grid grid-cols-1 gap-6">
                   <OrderItem v-for="order in deliveryOrders" :key="order.email" :order="order">
+                  </OrderItem>
+                </ul>
+              </div>
+            </div>
+            <div class="rounded-lg">
+              <div class="h-16 py-2 px-3 font-bold text-xl items-center flex sticky top-0 bg-gray-100 ">
+                Rappi
+              </div>
+              <div v-if="deliveryRappiOrders.length === 0" class="flex justify-center h-full">
+                <p class="text-gray-500 text-sm">
+                  Aqui veras las ordenes por aceptar
+                </p>
+              </div>
+              <div v-else class="p-1">
+                <ul role="list" class="grid grid-cols-1 gap-6">
+                  <OrderItem v-for="order in deliveryRappiOrders" :key="order.email" :order="order">
                   </OrderItem>
                 </ul>
               </div>
@@ -53,12 +69,14 @@
         </div>
       </main>
     </div>
+    <OrderItemDetails />
   </div>
 </template>
 <script setup>
 import { useMainStore } from "@/stores/main.store";
 import Header from "@/components/Header.vue";
 import OrderItem from "@/components/OrderItem.vue";
+import OrderItemDetails from "@/components/OrderItemDetails.vue";
 import { computed, onMounted, ref } from "vue";
 import { supabase } from "@/services/supabase.service";
 
@@ -79,7 +97,11 @@ const preparingOrders = computed(() => {
 });
 
 const deliveryOrders = computed(() => {
-  return orders.value.filter((order) => order.status === "delivery").reverse();
+  return orders.value.filter((order) => order.status === "delivery"  && order.shipping_method !== 'Rappi').reverse();
+});
+
+const deliveryRappiOrders = computed(() => {
+  return orders.value.filter((order) => order.status === "delivery" && order.shipping_method === 'Rappi').reverse();
 });
 
 const init = () => {

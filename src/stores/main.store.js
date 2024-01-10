@@ -13,6 +13,7 @@ export const useMainStore = defineStore("mainStore", {
     paymentMethodModal: false,
     shippingMethodModal: false,
     notesModal: false,
+    orderDetails: null
   }),
   actions: {
     async findUser(values) {
@@ -200,7 +201,7 @@ export const useMainStore = defineStore("mainStore", {
       } else {
         return {
           success: true,
-          data: dataEnterprises,
+          data: order,
         };
       }
     },
@@ -236,6 +237,10 @@ export const useMainStore = defineStore("mainStore", {
     async toggleNotesModal() {
       this.notesModal = !this.notesModal;
     },
+
+    setOrderDetails(order) {
+      this.orderDetails = order;
+    }
   },
 
   getters: {

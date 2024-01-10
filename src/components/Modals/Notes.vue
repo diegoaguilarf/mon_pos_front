@@ -38,10 +38,10 @@ const onClose = () => {
     mainStore.toggleNotesModal();
 }
 
-const save = () => {
-    mainStore.addNotesToOrder(notes.value);
-    mainStore.createOrder();
+const save = async () => {
     onClose();
+    await mainStore.addNotesToOrder(notes.value);
+    await mainStore.createOrder();
     router.push("/");
 }
 
