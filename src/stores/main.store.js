@@ -125,6 +125,9 @@ export const useMainStore = defineStore("mainStore", {
     async getOrders() {
       const { data: dataEnterprises, error } = await supabase.from("orders").select(`
       *,
+      users (
+        *
+      ),
       orders_products (
         *,
         products (

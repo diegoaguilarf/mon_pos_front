@@ -16,7 +16,7 @@
                                         <div class="px-4 sm:px-6">
                                             <div class="flex items-start justify-between">
                                                 <DialogTitle class="text-base font-semibold leading-6 text-gray-900">
-                                                    ID: {{mainStore?.orderDetails?.id}}
+                                                    ID: {{ mainStore?.orderDetails?.id }}
                                                 </DialogTitle>
                                                 <div class="ml-3 flex h-7 items-center">
                                                     <button type="button"
@@ -30,7 +30,44 @@
                                             </div>
                                         </div>
                                         <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                                            <!-- Your content -->
+                                            <!-- <pre>{{ mainStore?.orderDetails }}</pre> -->
+                                            <div class="mb-10">
+                                                <div class="flex items-center justify-between space-x-3">
+                                                    <h3 class="text-lg font-semibold">Cliente</h3>
+                                                </div>
+                                                <div class="text-md text-gray-500">
+                                                    <p>Nombre: {{ mainStore?.orderDetails?.users.full_name }}</p>
+                                                    <p>Celular: {{ mainStore?.orderDetails?.users.phone_number }}</p>
+                                                    <p>Dirección: {{ mainStore?.orderDetails?.users.address }}</p>
+                                                    <p>Notas: {{ mainStore?.orderDetails?.users.notes }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 truncate">
+                                                <div class="flex items-center justify-between space-x-3">
+                                                    <h3 class="text-lg font-semibold">Productos</h3>
+                                                    <img src="@/assets/rappi.png"
+                                                        v-if="mainStore?.orderDetails?.shipping_method === 'Rappi'"
+                                                        class="w-8 h-8">
+                                                    <img src="@/assets/sp.jpg"
+                                                        v-else-if="mainStore?.orderDetails?.shipping_method === 'Externo'"
+                                                        class="w-8 h-8 rounded-full">
+                                                    <img src="@/assets/monchef.png"
+                                                        v-else-if="mainStore?.orderDetails?.shipping_method === 'Monchef'"
+                                                        class="w-8 h-8">
+                                                </div>
+                                                <ul class="">
+                                                    <li v-for="(product, index) in mainStore?.orderDetails?.orders_products"
+                                                        :key="index" class="mt-1 truncate text-md text-gray-500">
+                                                        <p>- {{ product.products.name }} X {{ product.quantity }}</p>
+                                                    </li>
+                                                </ul>
+                                                <div class="border-t mt-3">
+                                                    <h3 class="text-gray-500 mt-3">Nota:</h3>
+                                                    <p class=" text-gray-500">
+                                                        {{ mainStore?.orderDetails?.notes }}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="flex flex-shrink-0 justify-end px-4 py-4">
