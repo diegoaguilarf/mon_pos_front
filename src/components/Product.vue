@@ -1,6 +1,6 @@
 <template>
-    <div class="max-w-56 bg-white rounded-lg p-4 cursor-pointer">
-        <img :src="props.product.product.image" alt="" @click="addProduct"/>
+    <div class="max-w-56 bg-white rounded-lg p-4 cursor-pointer" @click="addProduct">
+        <img :src="props.product.product.image" alt=""/>
         <div>
             <h1>{{ props.product.product.name }}</h1>
             <p>{{ props.product.product.price }}</p>
