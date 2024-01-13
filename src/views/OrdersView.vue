@@ -87,6 +87,8 @@ onMounted(() => {
   getOrders();
 });
 
+const audio = new Audio("/super-mario-bros.mp3");
+
 const newOrders = computed(() => {
   return mainStore.orders.filter((order) => order.status === "new").reverse();
 });
@@ -95,7 +97,7 @@ const preparingOrders = computed(() => {
 });
 
 const deliveryOrders = computed(() => {
-  return mainStore.orders.filter((order) => order.status === "delivery"  && order.shipping_method !== 'Rappi').reverse();
+  return mainStore.orders.filter((order) => order.status === "delivery" && order.shipping_method !== 'Rappi').reverse();
 });
 
 const deliveryRappiOrders = computed(() => {
@@ -123,17 +125,36 @@ const init = () => {
       }
     )
     .subscribe()
+
+    setInterval(() => {
+      if (newOrders.value.length > 0) {
+        playToAlert()
+      }
+    }, 30000);
 };
 
 const getOrders = async () => {
   mainStore.getOrders();
 }
 
+const playToAlert = () => {
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
+}
+
+const stopToAlert = () => {
+  audio.pause();
+  audio.currentTime = 0;
+}
+
 const listenOrderInsert = async () => {
+  playToAlert()
   getOrders()
 }
 
 const listenOrderStatusChange = async ({ id, status }) => {
+  stopToAlert();
   const orders = mainStore.orders.map((order) => {
     if (order.id === id) {
       order.status = status;
