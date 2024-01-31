@@ -58,7 +58,11 @@
                                                 <ul class="">
                                                     <li v-for="(product, index) in mainStore?.orderDetails?.orders_products"
                                                         :key="index" class="mt-1 truncate text-md text-gray-500">
-                                                        <p>- {{ product.products.name }} X {{ product.quantity }}</p>
+                                                        <div class="flex justify-between">
+                                                            <p>- {{ product.products.name }} X {{ product.quantity }}</p>
+                                                            <p>${{ product.total }}</p>
+                                                        </div>
+                                                        <p class="text-sm text-red-500">{{ product.notes }}</p>
                                                     </li>
                                                 </ul>
                                                 <div class="border-t mt-3">

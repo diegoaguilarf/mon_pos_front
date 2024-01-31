@@ -33,11 +33,16 @@
             </div>
         </div>
 
-        <div class="mt-4">
+        <div class="flex justify-between mt-4">
             <button type="button"
                 class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 @click="onClose">
                 Cancelar
+            </button>
+
+            <button type="submit" @click="updateOrderItem"
+                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Guardar
             </button>
         </div>
     </Modal>
@@ -51,13 +56,19 @@ import Modal from "./index.vue";
 const mainStore = useMainStore();
 
 const total = ref(0);
+const notes = ref(null);
 
 watch([() => mainStore?.orderItem?.price, () => mainStore?.orderItem?.quantity], () => {
     total.value = (mainStore?.orderItem?.price * mainStore?.orderItem?.quantity) || 0
 });
 
 const updateOrderItem = async () => {
-    await mainStore.updateOrderItem(full_name.value, notes.value);
+    await mainStore.updateOrderItem({
+        id: mainStore.orderItem.id,
+        total: total.value,
+        notes: notes.value
+    });
+    mainStore.setOrderItem(null);
     onClose();
 }
 

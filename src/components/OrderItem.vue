@@ -14,6 +14,7 @@
           <ul class="">
             <li v-for="(product, index) in order.orders_products" :key="index" class="mt-1 truncate text-md text-gray-500">
               <p>- {{ product.products.name }} X {{ product.quantity }}</p>
+              <p v-if="product.notes" class="text-sm text-red-500">^ {{ product.notes }}</p>
             </li>
           </ul>
           <div class="border-t mt-3">

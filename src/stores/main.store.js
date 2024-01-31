@@ -211,6 +211,8 @@ export const useMainStore = defineStore("mainStore", {
         this.orderProducts.push({ ...product, quantity: 1 });
       } else {
         this.orderProducts[productIndex].quantity += 1;
+        this.orderProducts[productIndex].total = null;
+        this.orderProducts[productIndex].notes = null;
       }
     },
 
@@ -222,6 +224,8 @@ export const useMainStore = defineStore("mainStore", {
         this.orderProducts.splice(productIndex, 1);
       } else {
         this.orderProducts[productIndex].quantity -= 1;
+        this.orderProducts[productIndex].total = null;
+        this.orderProducts[productIndex].notes = null;
       }
     },
 
@@ -237,12 +241,12 @@ export const useMainStore = defineStore("mainStore", {
         })
         .select();
 
-      console.log("here", order, error);
-
       const orderProducts = this.orderProducts.map((product) => ({
         order_id: order[0].id,
         product_id: product.id,
         quantity: product.quantity,
+        total: product?.total || product.quantity * product.price,
+        notes: product?.notes || null
       }));
 
       await supabase.from("orders_products").insert(orderProducts).select();
@@ -319,6 +323,19 @@ export const useMainStore = defineStore("mainStore", {
 
     async setOrderItem(product) {
       this.orderItem = product;
+    },
+
+    async updateOrderItem(newValues) {
+      this.orderProducts = this.orderProducts.map((product) => {
+        if (newValues.id === product.id) {
+          return {
+            ...product,
+            total: newValues.total,
+            notes: newValues.notes
+          }
+        }
+        return product;
+      })
     },
 
     async togglePaymentMethodModal() {

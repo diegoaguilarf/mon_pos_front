@@ -22,9 +22,14 @@
                         <h3 @click="openOrderItem(product)" class="cursor-pointer">
                           <a>{{ product.name }}</a>
                         </h3>
-                        <p @click="openOrderItem(product)" class="ml-4 cursor-pointer">
-                          {{ product?.total || product.quantity * product.price }}
-                        </p>
+                        <div class="flex">
+                          <p v-if="product?.total" class="ml-4 cursor-pointer line-through text-gray-400">
+                            ${{ product.quantity * product.price }}
+                          </p>
+                          <p @click="openOrderItem(product)" class="ml-4 cursor-pointer">
+                            ${{ product?.total || product.quantity * product.price }}
+                          </p>
+                        </div>
                       </div>
                     </div>
                     <div class="flex items-end justify-between text-sm">
@@ -58,7 +63,7 @@
               :class="mainStore?.orderShippingMethod ? 'bg-green-600 text-white' : ''" @click="openShipping">
               <p>{{ mainStore?.orderShippingMethod || "Medio de envio" }}</p>
             </div>
-            <div class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
+            <!-- <div class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
               :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''" @click="openPayment">
               <p>{{ mainStore?.orderPaymentMethod || "Cupones" }}</p>
             </div>
@@ -68,7 +73,7 @@
             </div>
             <div class="flex-1 py-4 text-center border-b border-gray-200 cursor-pointer"
               :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''" @click="openPayment">
-            </div>
+            </div> -->
           </div>
           <div class="px-4 py-6 sm:px-6">
             <div class="flex justify-between text-base font-medium text-gray-900">
@@ -105,7 +110,7 @@ import { useMainStore } from "@/stores/main.store";
 
 const mainStore = useMainStore();
 
-const products = ref(mainStore.orderProducts);
+const products = computed(() => mainStore.orderProducts);
 const shippingCost = ref(0);
 
 const subtotalOrder = computed(() => {
