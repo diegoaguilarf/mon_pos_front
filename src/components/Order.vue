@@ -11,18 +11,19 @@
             <div class="flow-root">
               <ul role="list" class="-my-6 divide-y divide-gray-200">
                 <li v-for="product in products" :key="product.id" class="flex py-2">
-                  <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                  <div @click="openOrderItem(product)"
+                    class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 cursor-pointer">
                     <img :src="product.image" class="h-full w-full object-cover object-center" />
                   </div>
 
                   <div class="ml-4 flex flex-1 flex-col justify-center">
                     <div>
                       <div class="flex justify-between text-base font-medium text-gray-900">
-                        <h3>
+                        <h3 @click="openOrderItem(product)" class="cursor-pointer">
                           <a>{{ product.name }}</a>
                         </h3>
-                        <p class="ml-4">
-                          {{ product.quantity * product.price }}
+                        <p @click="openOrderItem(product)" class="ml-4 cursor-pointer">
+                          {{ product?.total || product.quantity * product.price }}
                         </p>
                       </div>
                     </div>
@@ -44,7 +45,7 @@
         </div>
 
         <div class="border-t border-gray-200">
-          <div class="flex">
+          <div class="grid grid-cols-3">
             <router-link to="/clientes" class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
               :class="mainStore?.orderCustomer ? 'bg-green-600 text-white' : ''">
               <p>{{ mainStore?.orderCustomer?.full_name || "Cliente" }}</p>
@@ -57,6 +58,17 @@
               :class="mainStore?.orderShippingMethod ? 'bg-green-600 text-white' : ''" @click="openShipping">
               <p>{{ mainStore?.orderShippingMethod || "Medio de envio" }}</p>
             </div>
+            <div class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
+              :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''" @click="openPayment">
+              <p>{{ mainStore?.orderPaymentMethod || "Cupones" }}</p>
+            </div>
+            <div class="flex-1 py-4 text-center border-r border-b border-gray-200 cursor-pointer"
+              :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''" @click="openPayment">
+              <p>{{ mainStore?.orderPaymentMethod || "Dirección" }}</p>
+            </div>
+            <div class="flex-1 py-4 text-center border-b border-gray-200 cursor-pointer"
+              :class="mainStore?.orderPaymentMethod ? 'bg-green-600 text-white' : ''" @click="openPayment">
+            </div>
           </div>
           <div class="px-4 py-6 sm:px-6">
             <div class="flex justify-between text-base font-medium text-gray-900">
@@ -67,7 +79,8 @@
               El envio sera calculado al final.
             </p>
             <div class="flex items-center justify-between">
-              <label for="shipping_cost" class="block leading-6 text-base font-medium text-gray-900">Valor del envio</label>
+              <label for="shipping_cost" class="block leading-6 text-base font-medium text-gray-900">Valor del
+                envio</label>
               <div class="mt-2">
                 <input v-model="shippingCost" id="shipping_cost" name="shipping_cost" type="text" placeholder="$0.00"
                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
@@ -109,6 +122,11 @@ const openPayment = () => {
 
 const openShipping = () => {
   mainStore.toggleShippingMethodModal();
+};
+
+const openOrderItem = (product) => {
+  mainStore.setOrderItem(product);
+  mainStore.toggleOrderItemModal();
 };
 
 const createOrder = async () => {

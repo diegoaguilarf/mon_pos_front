@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import OrdersView from "@/views/OrdersView.vue";
 import OrdersNew from "@/views/NewOrderView.vue";
-import FormClient from "@/views/FormClient.vue";
+import Customers from "@/views/Customers.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,8 +19,8 @@ const router = createRouter({
     },
     {
       path: "/clientes",
-      name: "clients",
-      component: FormClient,
+      name: "Customers",
+      component: Customers,
     },
   ],
 });

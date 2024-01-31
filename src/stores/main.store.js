@@ -6,15 +6,18 @@ export const useMainStore = defineStore("mainStore", {
   state: () => ({
     user: null,
     orders: [],
+    orderItem: null,
     orderProducts: [],
     orderCustomer: null,
     orderPaymentMethod: null,
     orderShippingMethod: null,
     orderShippingCost: null,
     orderNotes: null,
+    orderItemModal: false,
     paymentMethodModal: false,
     shippingMethodModal: false,
     notesModal: false,
+    createCustomerModal: false,
     orderDetails: null
   }),
   actions: {
@@ -75,6 +78,45 @@ export const useMainStore = defineStore("mainStore", {
       const { data, error } = await supabase
         .from("users")
         .insert([customer])
+        .select();
+
+      if (error) {
+        console.log(error);
+        alert(error.details);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data: data[0],
+        };
+      }
+    },
+
+    async getCouponsByUser(user_id) {
+      const { data, error } = await supabase
+        .from("coupons")
+        .select()
+        .eq("user_id", user_id);
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      } else {
+        return {
+          success: true,
+          data,
+        };
+      }
+    },
+
+    async createCoupon(coupon) {
+      const { data, error } = await supabase
+        .from("coupons")
+        .insert([coupon])
         .select();
 
       if (error) {
@@ -275,6 +317,10 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
+    async setOrderItem(product) {
+      this.orderItem = product;
+    },
+
     async togglePaymentMethodModal() {
       this.paymentMethodModal = !this.paymentMethodModal;
     },
@@ -285,6 +331,14 @@ export const useMainStore = defineStore("mainStore", {
 
     async toggleNotesModal() {
       this.notesModal = !this.notesModal;
+    },
+
+    async toggleCreateCustomerModal() {
+      this.createCustomerModal = !this.createCustomerModal;
+    },
+
+    async toggleOrderItemModal() {
+      this.orderItemModal = !this.orderItemModal;
     },
 
     setOrderDetails(order) {

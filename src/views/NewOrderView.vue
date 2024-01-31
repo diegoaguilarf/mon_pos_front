@@ -11,6 +11,7 @@
     <PaymentMethodModal />
     <ShippingMethodModal />
     <NotesModal />
+    <OrderItemModal />
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import Order from "../components/Order.vue";
 import PaymentMethodModal from "../components/Modals/PaymentMethod.vue";
 import ShippingMethodModal from "../components/Modals/ShippingMethod.vue";
 import NotesModal from "../components/Modals/Notes.vue";
+import OrderItemModal from "../components/Modals/OrderItem.vue";
 import { onMounted, ref } from "vue";
 
 const mainStore = useMainStore();

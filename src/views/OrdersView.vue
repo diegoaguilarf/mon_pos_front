@@ -120,7 +120,6 @@ const init = () => {
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'orders' },
       (payload) => {
-        console.log('UPDATE Change received!', payload)
         listenOrderStatusChange(payload.new)
       }
     )
