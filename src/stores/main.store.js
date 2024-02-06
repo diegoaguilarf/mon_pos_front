@@ -1,6 +1,8 @@
+import { jsPDF } from "jspdf";
 import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { supabase } from "@/services/supabase.service";
+import PrintnodeEndpoints from "@/api/printnode";
 
 export const useMainStore = defineStore("mainStore", {
   state: () => ({
@@ -251,6 +253,20 @@ export const useMainStore = defineStore("mainStore", {
 
       await supabase.from("orders_products").insert(orderProducts).select();
 
+      const bill = this.generateBill({
+        id: order[0].id,
+        products: this.orderProducts,
+        customer: this.orderCustomer,
+        shipping_method: this.orderShippingMethod,
+        shipping_cost: this.orderShippingCost,
+        payment_method: this.orderPaymentMethod,
+        notes: this.orderNotes,
+      });
+      await PrintnodeEndpoints.createPrintJob({
+        title: order[0].id,
+        content: bill
+      });
+
       this.orderProducts = [];
       this.orderCustomer = null;
       this.orderPaymentMethod = null;
@@ -360,7 +376,23 @@ export const useMainStore = defineStore("mainStore", {
 
     setOrderDetails(order) {
       this.orderDetails = order;
-    }
+    },
+
+    generateBill(order) {
+      console.log("ORDER", order);
+      const doc = new jsPDF();
+      doc.text("Monchef Colombia", 10, 10);
+      doc.text(`Order #${order.id}`, 10, 20);
+      doc.line(10, 30, 200, 30);
+      doc.text(order.customer.full_name, 10, 40);
+      doc.text(order.customer.phone_number.toString(), 10, 50);
+      doc.text(order.customer.address, 10, 60);
+      doc.line(10, 70, 200, 70);
+      order.products.forEach((product, index) => {
+        doc.text(`${product.quantity} X ${product.name}`, 10, 80 + (index * 10));
+      });
+      doc.save("a4.pdf");
+    },
   },
 
   getters: {

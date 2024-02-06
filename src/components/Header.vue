@@ -37,24 +37,13 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import {
     Disclosure,
     DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
+    DisclosurePanel
 } from "@headlessui/vue";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
-const route = useRoute();
 const router = useRouter();
-const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
-];
 
 const goToNewOrder = () => {
     router.push({ path: "/orders/new" });
