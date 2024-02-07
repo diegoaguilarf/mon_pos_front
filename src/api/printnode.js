@@ -5,10 +5,10 @@ const EPSON_PRINTER_ID = 73034444;
 export default class PrintnodeEndpoints {
 
     static async createPrintJob({ title, content }) {
-
+        console.log('Creating print job')
         return PrintnodeService({
             method: 'POST',
-            url: '/printers',
+            url: '/printjobs',
             data: {
                 "printerId": EPSON_PRINTER_ID,
                 "title": title,
