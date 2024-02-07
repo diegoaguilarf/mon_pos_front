@@ -8,6 +8,6 @@ const instance = axios.create({
 });
 
 // Alter defaults after instance has been created
-instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+instance.defaults.headers.common['Authorization'] = `Basic ${AUTH_TOKEN}`;
 
 export default instance;
