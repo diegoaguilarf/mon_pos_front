@@ -11,7 +11,7 @@ export default class PrintnodeEndpoints {
             url: '/printjobs',
             data: {
                 "printerId": EPSON_PRINTER_ID,
-                "title": title,
+                "title": title.toString(),
                 "contentType": "pdf_uri",
                 "content": "https://mon-pos-front.vercel.app/bill.pdf",
                 "source": "Monchef POS"

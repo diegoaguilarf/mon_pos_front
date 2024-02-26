@@ -393,6 +393,26 @@ export const useMainStore = defineStore("mainStore", {
       });
       doc.save("a4.pdf");
     },
+
+    async getInventory() {
+      const { data: dataEnterprises, error } = await supabase
+        .from("items")
+        .select();
+
+      if (error) {
+        console.log(error);
+        return {
+          success: false,
+        };
+      }
+      
+      console.log(dataEnterprises)
+      this.inventory = dataEnterprises;
+      return {
+        success: true,
+        data: dataEnterprises,
+      };
+    }
   },
 
   getters: {
