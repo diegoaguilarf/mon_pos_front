@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { supabase } from "@/services/supabase.service";
 import PrintnodeEndpoints from "@/api/printnode";
+import ApitemplateioEndpoints from "@/api/apitemplateio";
 
 export const useMainStore = defineStore("mainStore", {
   state: () => ({
@@ -378,20 +379,56 @@ export const useMainStore = defineStore("mainStore", {
       this.orderDetails = order;
     },
 
-    generateBill(order) {
-      console.log("ORDER", order);
-      const doc = new jsPDF();
-      doc.text("Monchef Colombia", 10, 10);
-      doc.text(`Order #${order.id}`, 10, 20);
-      doc.line(10, 30, 200, 30);
-      doc.text(order.customer.full_name, 10, 40);
-      doc.text(order.customer.phone_number.toString(), 10, 50);
-      doc.text(order.customer.address, 10, 60);
-      doc.line(10, 70, 200, 70);
-      order.products.forEach((product, index) => {
-        doc.text(`${product.quantity} X ${product.name}`, 10, 80 + (index * 10));
-      });
-      doc.save("a4.pdf");
+    async generateBill(order) {
+      const response = await ApitemplateioEndpoints.createPDF({
+        template_id: "1ae77b234045eef6",
+        body: {
+          "date": "15/05/2022",
+          "invoice_no": "435568799",
+          "sender_address1": "3244 Jurong Drive",
+          "sender_address2": "Falmouth Maine 1703",
+          "sender_phone": "255-781-6789",
+          "sender_email": "hello@logos.com",
+          "customer_name": "Diego Aguilar",
+          "customer_address": "2354 Lakeside Drive",
+          "customer_phone": "34333-84-223",
+          "items": [
+            {
+              "item_name": "Oil",
+              "unit": 1,
+              "unit_price": 100,
+              "total": 100
+            },
+            {
+              "item_name": "Rice",
+              "unit": 2,
+              "unit_price": 200,
+              "total": 400
+            },
+            {
+              "item_name": "Mangoes",
+              "unit": 3,
+              "unit_price": 300,
+              "total": 900
+            },
+            {
+              "item_name": "Cloth",
+              "unit": 4,
+              "unit_price": 400,
+              "total": 1600
+            },
+            {
+              "item_name": "Orange",
+              "unit": 7,
+              "unit_price": 20,
+              "total": 1400
+            }
+          ],
+          "total": "total",
+          "footer_email": "hello@logos.com"
+        }
+      })
+      console.log("PDF", response.data);
     },
 
     async getInventory() {
@@ -405,7 +442,7 @@ export const useMainStore = defineStore("mainStore", {
           success: false,
         };
       }
-      
+
       console.log(dataEnterprises)
       this.inventory = dataEnterprises;
       return {
