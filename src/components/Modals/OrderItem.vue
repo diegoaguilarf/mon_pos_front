@@ -58,8 +58,9 @@ const mainStore = useMainStore();
 const total = ref(0);
 const notes = ref(null);
 
-watch([() => mainStore?.orderItem?.price, () => mainStore?.orderItem?.quantity], () => {
-    total.value = (mainStore?.orderItem?.price * mainStore?.orderItem?.quantity) || 0
+watch([() => mainStore?.orderItem], () => {
+    total.value = mainStore?.orderItem?.total || (mainStore?.orderItem?.price * mainStore?.orderItem?.quantity) || 0
+    notes.value = mainStore?.orderItem?.notes || null
 });
 
 const updateOrderItem = async () => {
@@ -68,12 +69,12 @@ const updateOrderItem = async () => {
         total: total.value,
         notes: notes.value
     });
-    mainStore.setOrderItem(null);
     onClose();
+    // mainStore.setOrderItem(null);
 }
 
 const onClose = () => {
-    mainStore.toggleOrderItemModal()
+    mainStore.toggleOrderItemModal(false)
 }
 
 </script>

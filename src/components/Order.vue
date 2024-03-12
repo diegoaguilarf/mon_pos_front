@@ -131,7 +131,7 @@ const openShipping = () => {
 
 const openOrderItem = (product) => {
   mainStore.setOrderItem(product);
-  mainStore.toggleOrderItemModal();
+  mainStore.toggleOrderItemModal(true);
 };
 
 const createOrder = async () => {

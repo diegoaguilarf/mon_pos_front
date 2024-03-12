@@ -12,7 +12,7 @@ export default class PrintnodeEndpoints {
                 "printerId": EPSON_PRINTER_ID,
                 "title": title.toString(),
                 "contentType": "pdf_uri",
-                "content": "https://mon-pos-front.vercel.app/bill.pdf",
+                "content": content,
                 "source": "Monchef POS"
             }
         });

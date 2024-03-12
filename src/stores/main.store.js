@@ -248,21 +248,31 @@ export const useMainStore = defineStore("mainStore", {
         order_id: order[0].id,
         product_id: product.id,
         quantity: product.quantity,
-        total: product?.total || product.quantity * product.price,
-        notes: product?.notes || null
+        total: Number(product?.total) || product.quantity * product.price,
+        notes: product?.notes || ""
       }));
+
+      const total = orderProducts.reduce((a, b) => a + b.total, 0);
 
       await supabase.from("orders_products").insert(orderProducts).select();
 
-      const bill = this.generateBill({
+      const bill = await this.generateBill({
         id: order[0].id,
-        products: this.orderProducts,
+        date: new Date().toLocaleDateString(),
+        products: this.orderProducts.map((product) => ({
+          name: product.name,
+          quantity: product.quantity,
+          total: Number(product?.total) || product.quantity * product.price,
+          notes: product?.notes || ""
+        })),
+        total: total,
         customer: this.orderCustomer,
         shipping_method: this.orderShippingMethod,
-        shipping_cost: this.orderShippingCost,
+        shipping_cost: Number(this.orderShippingCost),
         payment_method: this.orderPaymentMethod,
-        notes: this.orderNotes,
+        notes: this.orderNotes || "",
       });
+
       await PrintnodeEndpoints.createPrintJob({
         title: order[0].id,
         content: bill
@@ -371,8 +381,8 @@ export const useMainStore = defineStore("mainStore", {
       this.createCustomerModal = !this.createCustomerModal;
     },
 
-    async toggleOrderItemModal() {
-      this.orderItemModal = !this.orderItemModal;
+    async toggleOrderItemModal(value) {
+      this.orderItemModal = value;
     },
 
     setOrderDetails(order) {
@@ -382,53 +392,9 @@ export const useMainStore = defineStore("mainStore", {
     async generateBill(order) {
       const response = await ApitemplateioEndpoints.createPDF({
         template_id: "1ae77b234045eef6",
-        body: {
-          "date": "15/05/2022",
-          "invoice_no": "435568799",
-          "sender_address1": "3244 Jurong Drive",
-          "sender_address2": "Falmouth Maine 1703",
-          "sender_phone": "255-781-6789",
-          "sender_email": "hello@logos.com",
-          "customer_name": "Diego Aguilar",
-          "customer_address": "2354 Lakeside Drive",
-          "customer_phone": "34333-84-223",
-          "items": [
-            {
-              "item_name": "Oil",
-              "unit": 1,
-              "unit_price": 100,
-              "total": 100
-            },
-            {
-              "item_name": "Rice",
-              "unit": 2,
-              "unit_price": 200,
-              "total": 400
-            },
-            {
-              "item_name": "Mangoes",
-              "unit": 3,
-              "unit_price": 300,
-              "total": 900
-            },
-            {
-              "item_name": "Cloth",
-              "unit": 4,
-              "unit_price": 400,
-              "total": 1600
-            },
-            {
-              "item_name": "Orange",
-              "unit": 7,
-              "unit_price": 20,
-              "total": 1400
-            }
-          ],
-          "total": "total",
-          "footer_email": "hello@logos.com"
-        }
+        body: order
       })
-      console.log("PDF", response.data);
+      return response.data.download_url;
     },
 
     async getInventory() {
