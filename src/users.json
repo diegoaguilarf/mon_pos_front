@@ -1,0 +1,21 @@
+{
+  "users":[
+    {
+      "email":"example1@gmail.com",
+      "password":"1234"
+    },
+    {
+      "email":"example2@gmail.com",
+      "password":"12345"
+    },
+    {
+      "email":"example3@gmail.com",
+      "password":"123456"
+    },
+    {
+      "email":"example4@gmail.com",
+      "password":"1234567"
+    }
+  ]
+}
+  
