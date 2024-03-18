@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import LoginView from "@/views/Login.vue";
 import DashboardView from "@/views/Dashboard.vue";
 
 import InventoryList from "@/views/Inventory/List.vue";
@@ -12,22 +11,13 @@ import OrdersView from "@/views/OrdersView.vue";
 import OrdersNew from "@/views/NewOrderView.vue";
 import Customers from "@/views/Customers.vue";
 
-// import users from '/src/users.json'
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "Login",
-      component: LoginView,
-
-    },
-    {
-      path: "/dashboard",
-      name: "Dashboard",
+      name: "dashboard",
       component: DashboardView,
-      meta: { requiresAuth: true }
     },
     {
       path: "/kds",
@@ -66,28 +56,5 @@ const router = createRouter({
     },
   ],
 });
-
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => route.meta.requiresAuth)) {
-    const user = JSON.parse(localStorage.getItem('user'));  // Cambiado de '/src/users.json' a 'user'
-
-    if (user) {
-      // El usuario está autenticado, permite la navegación
-      console.log('El usuario está autenticado, permite la navegación');
-      next();
-    } else {
-      // El usuario no está autenticado, redirige a la página de login
-      console.log('El usuario no está autenticado, redirige a la página de login');
-      next('/');
-    }
-  } else {
-    // Rutas públicas, permite la navegación
-    console.log('Rutas públicas, permite la navegación');
-    next();
-  }
-});
-
-
 
 export default router;
