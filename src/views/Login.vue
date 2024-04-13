@@ -48,7 +48,8 @@
 <script setup>
 import router from '@/router';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+
 
 const email = ref('');
 const password = ref('');
@@ -70,6 +71,7 @@ const login = async () => {
   const { value: emailValue } = email;
   const { value: passwordValue } = password;
   const user = users.value.find((u) => String(u.email) === emailValue && String(u.password) === passwordValue);
+  console.log(user)
   if (user) {
     console.log('Inicio de sesión exitoso. Usuario:', user);
     localStorage.setItem('user', JSON.stringify(user));
@@ -79,5 +81,7 @@ const login = async () => {
     alert('Credenciales incorrectas');
   }
 };
+
+onMounted(loadUserData);
 
 </script>
