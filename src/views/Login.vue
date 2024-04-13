@@ -57,7 +57,7 @@ const users = ref([]);
 
 const loadUserData = async () => {
   try {
-    const response = await axios.get('/src/users.json');
+    const response = await axios.get('/users.json');
     users.value = response.data.users;
     console.log("Datos de usuario cargados con exito")
   } catch (error) {
