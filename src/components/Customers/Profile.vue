@@ -23,7 +23,7 @@
                     </dd>
                 </div>
                 <div class="py-6">
-                    <div>
+                    <!-- <div>
                         <div class="mt-2">
                             <input v-model="detailAddress" type="text" name="detailAddress" id="detailAddress"
                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -31,7 +31,7 @@
                         </div>
                         <button @click="updateAddress(address.id)" type="button"
                             class="mt-4 rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt class="text-sm font-medium leading-6 text-gray-900">Phone Number</dt>
@@ -73,7 +73,33 @@
                         </span>
                     </dd>
                 </div>
-                <Addresses></Addresses>
+                <!-- <Addresses></Addresses> -->
+                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Direcciones</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
+                            <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
+                                <div class="flex w-0 flex-1 items-center">
+                                    <MapPinIcon class="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                                    <div class="ml-4 flex flex-col min-w-0 flex-1">
+                                        <div class="flex gap-2">
+                                            <span class="truncate font-medium">Localizacion</span>
+                                            <span class="flex-shrink-0 text-gray-400">- -</span>
+                                        </div>
+                                        <span class="flex-shrink-0 text-gray-400">{{ orderCustomer?.address }}</span>
+                                    </div>
+                                </div>
+                                <div class="ml-4 flex flex-shrink-0 space-x-4">
+                                    <button type="button"
+                                        class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
+                                    <span class="text-gray-200" aria-hidden="true">|</span>
+                                    <button type="button"
+                                        class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-800">Eliminar</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                </div>
                 <!--Aqui estaba el address-->
 
                 <!-- <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
