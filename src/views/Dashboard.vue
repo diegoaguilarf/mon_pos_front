@@ -23,6 +23,9 @@
                     <router-link to="/kds" class="grid place-content-center bg-green-500 text-white font-semibold w-32 h-32 rounded-lg">
                         KDS
                     </router-link>
+                    <router-link to="/delivery" class="grid place-content-center bg-green-500 text-white font-semibold w-32 h-32 rounded-lg">
+                        Logistica
+                    </router-link>
                 </div>
             </div>
         </div>
