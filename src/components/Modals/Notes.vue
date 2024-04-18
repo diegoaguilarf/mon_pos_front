@@ -42,7 +42,7 @@ const save = async () => {
     onClose();
     await mainStore.addNotesToOrder(notes.value);
     await mainStore.createOrder();
-    router.push("/");
+    router.push("/clientes");
 }
 
 </script>

@@ -1,20 +1,34 @@
 {
     "users":[
       {
-        "email":"example1@gmail.com",
+        "full_name":"Diego Aguilar",
+        "email":"diego@monchef.com",
         "password":"1234"
       },
       {
-        "email":"example2@gmail.com",
-        "password":"12345"
+        "full_name":"Camilo Reyes",
+        "email":"camilo@monchef.com",
+        "password":"1234"
       },
       {
-        "email":"example3@gmail.com",
-        "password":"123456"
+        "full_name":"Sebastian Franco",
+        "email":"sebastian@monchef.com",
+        "password":"1234"
       },
       {
-        "email":"example4@gmail.com",
-        "password":"1234567"
+        "full_name":"Maritza",
+        "email":"maritza@monchef.com",
+        "password":"1234"
+      },
+      {
+        "full_name":"Alejandra",
+        "email":"alejandra@monchef.com",
+        "password":"1234"
+      },
+      {
+        "full_name":"Full Checker",
+        "email":"fullchecker@monchef.com",
+        "password":"1234"
       }
     ]
   }

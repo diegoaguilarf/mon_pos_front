@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <Profile  v-if="showOrderCustomer = showOrderCustomer" :orderCustomer="orderCustomer" />
+      <Profile v-if="orderCustomer" :orderCustomer="orderCustomer" />
 
       <!-- <Coupons :orderCustomer="orderCustomer" /> -->
 
@@ -53,8 +53,6 @@ import { useMainStore } from "@/stores/main.store";
 import Profile from "@/components/Customers/Profile.vue";
 import Coupons from "@/components/Customers/Coupons.vue";
 import CreateCustomer from "@/components/Modals/CreateCustomer.vue";
-
-const showOrderCustomer = ref(false)
 
 const mainStore = useMainStore();
 
@@ -85,7 +83,6 @@ const getCustomers = async () => {
 };
 
 const assignCustomerToOrder = async (customer) => {
-  showOrderCustomer.value = true
   try {
     await mainStore.assignCustomerToOrder(customer);
   } catch (error) {

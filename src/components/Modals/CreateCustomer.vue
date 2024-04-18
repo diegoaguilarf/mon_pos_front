@@ -21,22 +21,6 @@
                         </div>
                     </div>
 
-                    <div class="col-span-2">
-                        <label for="identification_number" class="block text-sm font-medium leading-6 text-gray-900">Identification Number</label>
-                        <div class="mt-2">
-                            <input v-model="identification_number" id="identification_number" name="identification_number" type="text"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
-
-                    <div class="col-span-2">
-                        <label for="birthdate" class="block text-sm font-medium leading-6 text-gray-900">Birthdate</label>
-                        <div class="mt-2">
-                            <input v-model="birthdate" id="birthdate" name="birthdate" type="date"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div>
-
                     <!-- <div class="col-span-1">
                         <label for="street-address"
                             class="block text-sm font-medium leading-6 text-gray-900">Tipo</label>
@@ -98,8 +82,6 @@ const mainStore = useMainStore();
 
 const full_name = ref("");
 const phone_number = ref("");
-const identification_number = ref("");
-const birthdate = ref("");
 const address = ref("");
 const notes = ref("");
 
@@ -107,8 +89,7 @@ const createCustomer = async () => {
     if (
         full_name.value === "" ||
         phone_number.value === "" ||
-        address === "" ||
-        notes === ""
+        address === ""
     ) {
         alert("Ingrese todos los datos");
         return;
@@ -116,19 +97,8 @@ const createCustomer = async () => {
     const customer = await mainStore.createCustomer({
         full_name: full_name.value,
         phone_number: phone_number.value,
-        identification_number: identification_number.value,
-        birthdate: birthdate.value,
         address: address.value,
         notes: notes.value,
-    });
-    await mainStore.createCoupon({
-        name: "Primer Bowl a $7000",
-        discount_type: "fixed_amount",
-        discount_amount: "0",
-        shipping_discount_type: "none",
-        shipping_discount_amount: null,
-        user_id: customer.data.id
-
     });
     await mainStore.assignCustomerToOrder(customer.data);
     onClose();

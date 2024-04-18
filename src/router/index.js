@@ -72,22 +72,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => route.meta.requiresAuth)) {
-    const user = JSON.parse(localStorage.getItem('user'));  // Cambiado de '/src/users.json' a 'user'
+  const user = JSON.parse(localStorage.getItem('user'));
 
-    if (user) {
-      // El usuario está autenticado, permite la navegación
-      console.log('El usuario está autenticado, permite la navegación');
-      next();
-    } else {
-      // El usuario no está autenticado, redirige a la página de login
-      console.log('El usuario no está autenticado, redirige a la página de login');
-      next('/');
-    }
-  } else {
-    // Rutas públicas, permite la navegación
-    console.log('Rutas públicas, permite la navegación');
+  if (user && to.path === '/') {
+    next('/dashboard');
+  }
+
+  if (user) {
     next();
+  } else {
+    next('/');
   }
 });
 

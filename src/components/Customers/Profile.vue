@@ -22,17 +22,6 @@
                         </span>
                     </dd>
                 </div>
-                <div class="py-6">
-                    <!-- <div>
-                        <div class="mt-2">
-                            <input v-model="detailAddress" type="text" name="detailAddress" id="detailAddress"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                placeholder="Nueva direccion" />
-                        </div>
-                        <button @click="updateAddress(address.id)" type="button"
-                            class="mt-4 rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
-                    </div> -->
-                </div>
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt class="text-sm font-medium leading-6 text-gray-900">Phone Number</dt>
                     <dd class="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
