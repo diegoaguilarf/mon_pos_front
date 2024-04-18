@@ -2,8 +2,8 @@
     <div class="h-screen py-4 px-6 flex-1 overflow-auto">
         <div class="flex justify-between items-center">
             <div>
-                <h3 class="text-base font-semibold leading-7 text-gray-900">Overview</h3>
-                <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Personal details and application.</p>
+                <h3 class="text-base font-semibold leading-7 text-gray-900">Descripción general</h3>
+                <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Datos personales del cliente</p>
             </div>
             <router-link to="/orders/new"
                 class="rounded-lg h-8 text-center items-center flex text-sm bg-blue-500 text-white px-3 py-1">
@@ -18,9 +18,20 @@
                         <span class="flex-grow capitalize">{{ orderCustomer?.full_name }}</span>
                         <span class="ml-4 flex-shrink-0">
                             <button type="button"
-                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                         </span>
                     </dd>
+                </div>
+                <div class="py-6">
+                    <!-- <div>
+                        <div class="mt-2">
+                            <input v-model="detailAddress" type="text" name="detailAddress" id="detailAddress"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                placeholder="Nueva direccion" />
+                        </div>
+                        <button @click="updateAddress(address.id)" type="button"
+                            class="mt-4 rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Guardar</button>
+                    </div> -->
                 </div>
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt class="text-sm font-medium leading-6 text-gray-900">Phone Number</dt>
@@ -28,7 +39,7 @@
                         <span class="flex-grow">{{ orderCustomer?.phone_number }}</span>
                         <span class="ml-4 flex-shrink-0">
                             <button type="button"
-                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                         </span>
                     </dd>
                 </div>
@@ -38,7 +49,7 @@
                         <span class="flex-grow">{{ orderCustomer?.birthdate }}</span>
                         <span class="ml-4 flex-shrink-0">
                             <button type="button"
-                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                         </span>
                     </dd>
                 </div>
@@ -48,7 +59,7 @@
                         <span class="flex-grow">{{ orderCustomer?.identification_number }}</span>
                         <span class="ml-4 flex-shrink-0">
                             <button type="button"
-                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                         </span>
                     </dd>
                 </div>
@@ -58,12 +69,13 @@
                         <span class="flex-grow">{{ orderCustomer?.notes }}</span>
                         <span class="ml-4 flex-shrink-0">
                             <button type="button"
-                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                         </span>
                     </dd>
                 </div>
+                <!-- <Addresses></Addresses> -->
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm font-medium leading-6 text-gray-900">Addresses</dt>
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Direcciones</dt>
                     <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                         <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
                             <li class="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
@@ -71,7 +83,7 @@
                                     <MapPinIcon class="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                     <div class="ml-4 flex flex-col min-w-0 flex-1">
                                         <div class="flex gap-2">
-                                            <span class="truncate font-medium">Location</span>
+                                            <span class="truncate font-medium">Localizacion</span>
                                             <span class="flex-shrink-0 text-gray-400">- -</span>
                                         </div>
                                         <span class="flex-shrink-0 text-gray-400">{{ orderCustomer?.address }}</span>
@@ -79,15 +91,17 @@
                                 </div>
                                 <div class="ml-4 flex flex-shrink-0 space-x-4">
                                     <button type="button"
-                                        class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Update</button>
+                                        class="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">Actualizar</button>
                                     <span class="text-gray-200" aria-hidden="true">|</span>
                                     <button type="button"
-                                        class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-800">Remove</button>
+                                        class="rounded-md bg-white font-medium text-gray-900 hover:text-gray-800">Eliminar</button>
                                 </div>
                             </li>
                         </ul>
                     </dd>
                 </div>
+                <!--Aqui estaba el address-->
+
                 <!-- <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt class="">
                         <p class="text-sm font-medium leading-6 text-gray-900">Memberships</p>
@@ -115,6 +129,8 @@
 
 <script setup>
 import { MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/20/solid'
+import Addresses from '@/components/Customers/Addresses.vue'
 
 const props = defineProps(["orderCustomer"]);
+
 </script>

@@ -17,8 +17,8 @@
                     <router-link to="/orders/new" class="grid place-content-center bg-red-500 text-white font-semibold w-32 h-32 rounded-lg">
                         POS
                     </router-link>
-                    <router-link to="/dashboard/profile" class="grid place-content-center bg-red-400 text-white font-semibold w-32 h-32 rounded-lg">
-                        POS Mobile
+                    <router-link to="/clientes" class="grid place-content-center bg-red-400 text-white font-semibold w-32 h-32 rounded-lg">
+                        Clientes
                     </router-link>
                     <router-link to="/kds" class="grid place-content-center bg-green-500 text-white font-semibold w-32 h-32 rounded-lg">
                         KDS
