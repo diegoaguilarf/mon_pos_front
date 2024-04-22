@@ -71,18 +71,4 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  const user = JSON.parse(localStorage.getItem('user'));
-
-  if (user && to.path === '/') {
-    next('/dashboard');
-  }
-
-  if (user) {
-    next();
-  } else {
-    next('/');
-  }
-});
-
 export default router;
