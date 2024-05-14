@@ -42,16 +42,9 @@
 </template>
 
 <script setup>
-/* All supported classes for color props
-    bg-pink-600 border-pink-600 text-pink-600
-    bg-amber-600
-    bg-green-600
-    bg-blue-600
-*/
 import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main.store";
 import Profile from "@/components/Customers/Profile.vue";
-import Coupons from "@/components/Customers/Coupons.vue";
 import CreateCustomer from "@/components/Modals/CreateCustomer.vue";
 
 const mainStore = useMainStore();

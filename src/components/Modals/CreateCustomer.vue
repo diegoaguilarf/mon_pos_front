@@ -2,7 +2,7 @@
     <Modal :show="mainStore.createCustomerModal" @close="">
         <form class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl" @submit.prevent="">
             <div class="px-4 py-6 sm:p-8">
-                <div class="grid max-w-2xl grid-cols-4 gap-x-6 gap-y-8">
+                <div class="grid max-w-2xl grid-cols-5 gap-x-6 gap-y-8">
 
                     <div class="col-span-2">
                         <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Celular</label>
@@ -12,7 +12,7 @@
                         </div>
                     </div>
 
-                    <div class="col-span-2">
+                    <div class="col-span-3">
                         <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
                         <div class="mt-2">
                             <input v-model="full_name" type="text" name="first-name" id="first-name"
@@ -21,27 +21,12 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-span-1">
-                        <label for="street-address"
-                            class="block text-sm font-medium leading-6 text-gray-900">Tipo</label>
-                        <div class="mt-2">
-                            <input v-model="address" type="text" name="street-address" id="street-address"
-                                autocomplete="street-address"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
+                    <div class="col-span-2">
+                        <Neighborhood v-model="neighborhood" />
+                        <p>{{ neighborhood.price }}</p>
                     </div>
 
-                    <div class="col-span-1">
-                        <label for="street-address"
-                            class="block text-sm font-medium leading-6 text-gray-900">Barrio</label>
-                        <div class="mt-2">
-                            <input v-model="address" type="text" name="street-address" id="street-address"
-                                autocomplete="street-address"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                        </div>
-                    </div> -->
-
-                    <div class="col-span-4">
+                    <div class="col-span-3">
                         <label for="street-address"
                             class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
                         <div class="mt-2">
@@ -76,12 +61,16 @@
 <script setup>
 import { ref } from "vue";
 import { useMainStore } from "@/stores/main.store";
+import { useCustomerStore } from "@/stores/customer.store";
 import Modal from "./index.vue";
+import Neighborhood from "@/components/Customers/Neighborhood.vue";
 
 const mainStore = useMainStore();
+const customerStore = useCustomerStore();
 
 const full_name = ref("");
 const phone_number = ref("");
+const neighborhood = ref("");
 const address = ref("");
 const notes = ref("");
 
@@ -94,9 +83,10 @@ const createCustomer = async () => {
         alert("Ingrese todos los datos");
         return;
     }
-    const customer = await mainStore.createCustomer({
+    const customer = await customerStore.createCustomer({
         full_name: full_name.value,
         phone_number: phone_number.value,
+        neighborhood_id: neighborhood.value.id,
         address: address.value,
         notes: notes.value,
     });

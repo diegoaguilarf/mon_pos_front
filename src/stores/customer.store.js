@@ -1,28 +1,17 @@
-import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { supabase } from "@/services/supabase.service";
 import PrintnodeEndpoints from "@/api/printnode";
-import ApitemplateioEndpoints from "@/api/apitemplateio";
 
-export const useMainStore = defineStore("mainStore", {
+export const useCustomerStore = defineStore("customerStore", {
   state: () => ({
     user: null,
-    orders: [],
-    orderItem: null,
-    orderProducts: [],
-    orderCustomer: null,
-    orderAddresses: [],
-    orderPaymentMethod: null,
-    orderShippingMethod: null,
-    orderShippingCost: null,
-    orderNotes: null,
-    orderItemModal: false,
     paymentMethodModal: false,
     shippingMethodModal: false,
-    addressesBottomSheet: false,
     notesModal: false,
     createCustomerModal: false,
-    orderDetails: null
+    orderDetails: null,
+    addresses: [],
+    neighborhoods: []
   }),
   actions: {
     async findUser(values) {
@@ -79,6 +68,43 @@ export const useMainStore = defineStore("mainStore", {
     },
 
     async createCustomer(customer) {
+
+      // const { data, error } = await supabase
+      //   .from("neighborhood")
+      //   .insert([{}])
+      //   .select();
+
+      // if (error) {
+      //   console.log(error);
+      //   alert(error.details);
+      //   return {
+      //     success: false,
+      //   };
+      // } else {
+      //   return {
+      //     success: true,
+      //     data: data[0],
+      //   };
+      // }
+
+      // const { data, error } = await supabase
+      //   .from("users")
+      //   .insert([customer])
+      //   .select();
+
+      // if (error) {
+      //   console.log(error);
+      //   alert(error.details);
+      //   return {
+      //     success: false,
+      //   };
+      // } else {
+      //   return {
+      //     success: true,
+      //     data: data[0],
+      //   };
+      // }
+
       const { data, error } = await supabase
         .from("users")
         .insert([customer])
@@ -96,6 +122,85 @@ export const useMainStore = defineStore("mainStore", {
           data: data[0],
         };
       }
+    },
+
+    async getNeighborhoods() {
+        const { data, error } = await supabase
+            .from("neighborhood")
+            .select();
+    
+        if (error) {
+            console.log(error);
+            return {
+            success: false,
+            };
+        } else {
+            this.neighborhoods = data;
+            return {
+            success: true,
+            data,
+            };
+        }
+    },
+
+    async createNeighborhood(neighborhood) {
+        const { data, error } = await supabase
+            .from("neighborhood")
+            .insert([neighborhood])
+            .select();
+    
+        if (error) {
+            console.log(error);
+            return {
+            success: false,
+            };
+        } else {
+            return {
+            success: true,
+            data: data[0],
+            };
+        }
+    },
+
+    async getAddressesByUser(user_id) {
+        const { data, error } = await supabase
+            .from("address")
+            .select(`*, neighborhood ( * )`)
+            .eq("user_id", user_id);
+    
+        if (error) {
+            console.log(error);
+            return {
+            success: false,
+            };
+        } else {
+            console.log(data);
+            this.addresses = data;
+            return {
+            success: true,
+            data,
+            };
+        }
+    },
+
+    async createAddress(address) {
+        const { data, error } = await supabase
+            .from("address")
+            .insert([address])
+            .select();
+    
+        if (error) {
+            console.log(error);
+            return {
+            success: false,
+            };
+        } else {
+            console.log(data[0])
+            return {
+            success: true,
+            data: data[0],
+            };
+        }
     },
 
     async getCouponsByUser(user_id) {
@@ -146,10 +251,6 @@ export const useMainStore = defineStore("mainStore", {
 
     async assignShippingMethodToOrder(shipping) {
       this.orderShippingMethod = shipping;
-    },
-
-    async addNotesToOrder(value) {
-      this.orderNotes = value;
     },
 
     async addShippingCostToOrder(shipping_cost) {
@@ -205,32 +306,6 @@ export const useMainStore = defineStore("mainStore", {
 
     setOrders(orders) {
       this.orders = orders;
-    },
-
-    async addProductToOrder(product) {
-      const productIndex = this.orderProducts.findIndex(
-        (item) => item.id === product.id
-      );
-      if (productIndex === -1) {
-        this.orderProducts.push({ ...product, quantity: 1 });
-      } else {
-        this.orderProducts[productIndex].quantity += 1;
-        this.orderProducts[productIndex].total = null;
-        this.orderProducts[productIndex].notes = null;
-      }
-    },
-
-    async removeProductFromOrder(product) {
-      const productIndex = this.orderProducts.findIndex(
-        (item) => item.id === product.id
-      );
-      if (this.orderProducts[productIndex].quantity === 1) {
-        this.orderProducts.splice(productIndex, 1);
-      } else {
-        this.orderProducts[productIndex].quantity -= 1;
-        this.orderProducts[productIndex].total = null;
-        this.orderProducts[productIndex].notes = null;
-      }
     },
 
     async createOrder() {
@@ -299,64 +374,6 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
-    async updateOrderStatus({ id, status }) {
-      const { data: dataEnterprises, error } = await supabase
-        .from('orders')
-        .update({ status })
-        .eq('id', id)
-        .select()
-
-      if (error) {
-        console.log(error);
-        return {
-          success: false,
-        };
-      } else {
-        return {
-          success: true,
-          data: dataEnterprises,
-        };
-      }
-    },
-
-    async updateOrderShipping({ id, shipping_method }) {
-
-      const { data: dataEnterprises, error } = await supabase
-        .from('orders')
-        .update({ shipping_method })
-        .eq('id', id)
-        .select()
-
-      const orders = this.orders.map((order) => {
-        if (order.id === id) {
-          order.shipping_method = shipping_method;
-        }
-        return order;
-      });
-
-      this.setOrders(orders);
-
-      if (error) {
-        console.log(error);
-        return {
-          success: false,
-        };
-      } else {
-        return {
-          success: true,
-          data: dataEnterprises,
-        };
-      }
-    },
-
-    async setOrderItem(product) {
-      this.orderItem = product;
-    },
-
-    async setOrderAddresses(addresses) {
-      this.orderAddresses = addresses;
-    },
-
     async updateOrderItem(newValues) {
       this.orderProducts = this.orderProducts.map((product) => {
         if (newValues.id === product.id) {
@@ -378,62 +395,14 @@ export const useMainStore = defineStore("mainStore", {
       this.shippingMethodModal = !this.shippingMethodModal;
     },
 
-    async toggleNotesModal() {
-      this.notesModal = !this.notesModal;
-    },
-
     async toggleCreateCustomerModal() {
       this.createCustomerModal = !this.createCustomerModal;
     },
-
-    async toggleOrderItemModal(value) {
-      this.orderItemModal = value;
-    },
-
-    async toggleAdressesBottomSheet() {
-      this.addressesBottomSheet = !this.addressesBottomSheet;
-    },
-
-    setOrderDetails(order) {
-      this.orderDetails = order;
-    },
-
-    async generateBill(order) {
-      const response = await ApitemplateioEndpoints.createPDF({
-        template_id: "1ae77b234045eef6",
-        body: order
-      })
-      return response.data.download_url;
-    },
-
-    async getInventory() {
-      const { data: dataEnterprises, error } = await supabase
-        .from("items")
-        .select();
-
-      if (error) {
-        console.log(error);
-        return {
-          success: false,
-        };
-      }
-
-      console.log(dataEnterprises)
-      this.inventory = dataEnterprises;
-      return {
-        success: true,
-        data: dataEnterprises,
-      };
-    }
   },
 
-  getters: {
-    subtotalOrder() {
-      return this.orderProducts.reduce((a, b) => a + b.quantity * b.price, 0);
-    },
-  },
+  getters: {},
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useMainStore, import.meta.hot));
+  import.meta.hot.accept(acceptHMRUpdate(useCustomerStore, import.meta.hot));
 }
