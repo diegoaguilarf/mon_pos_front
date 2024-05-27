@@ -33,8 +33,6 @@
 
       <Profile v-if="orderCustomer" :orderCustomer="orderCustomer" />
 
-      <!-- <Coupons :orderCustomer="orderCustomer" /> -->
-
 
     </div>
     <CreateCustomer />
@@ -42,16 +40,9 @@
 </template>
 
 <script setup>
-/* All supported classes for color props
-    bg-pink-600 border-pink-600 text-pink-600
-    bg-amber-600
-    bg-green-600
-    bg-blue-600
-*/
 import { computed, onMounted, ref } from "vue";
 import { useMainStore } from "@/stores/main.store";
 import Profile from "@/components/Customers/Profile.vue";
-import Coupons from "@/components/Customers/Coupons.vue";
 import CreateCustomer from "@/components/Modals/CreateCustomer.vue";
 
 const mainStore = useMainStore();
@@ -64,13 +55,13 @@ onMounted(() => {
   getCustomers();
 });
 
-const filterCustomers = (e) => {
-  if (e.target.value === "") {
-    getCustomers();
+const filterCustomers = async (e) => {
+  try {
+    const { data: originCustomers } = await mainStore.getCustomers(e.target.value);
+    customers.value = originCustomers;
+  } catch (error) {
+    console.log(error);
   }
-  customers.value = customers.value.filter((customer) =>
-    String(customer.phone_number).includes(e.target.value)
-  );
 };
 
 const getCustomers = async () => {

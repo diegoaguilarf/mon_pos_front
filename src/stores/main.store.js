@@ -59,21 +59,40 @@ export const useMainStore = defineStore("mainStore", {
       }
     },
 
-    async getCustomers() {
-      const { data: dataEnterprises, error } = await supabase
-        .from("users")
-        .select();
+    async getCustomers(phone_number = null) {
+      if (phone_number) {
+        const { data: dataEnterprises, error } = await supabase
+          .from("users")
+          .select()
+          .eq('phone_number', phone_number.replace(/\D/g, ""))
 
-      if (error) {
-        console.log(error);
-        return {
-          success: false,
-        };
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+          };
+        } else {
+          return {
+            success: true,
+            data: dataEnterprises,
+          };
+        }
       } else {
-        return {
-          success: true,
-          data: dataEnterprises,
-        };
+        const { data: dataEnterprises, error } = await supabase
+          .from("users")
+          .select();
+
+        if (error) {
+          console.log(error);
+          return {
+            success: false,
+          };
+        } else {
+          return {
+            success: true,
+            data: dataEnterprises,
+          };
+        }
       }
     },
 
