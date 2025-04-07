@@ -1,6 +1,6 @@
 import PrintnodeService from '@/services/printnode.service';
 
-const EPSON_PRINTER_ID = 73034444;
+const EPSON_PRINTER_ID = 74252398;
 
 export default class PrintnodeEndpoints {
 
